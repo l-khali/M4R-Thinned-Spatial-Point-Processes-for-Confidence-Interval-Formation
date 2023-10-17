@@ -13,8 +13,8 @@ subsets_method <- function(data, N, alpha, R=99) {
     
     xstart <- runif(1,0,1)
     ystart <- runif(1,0,1)
-    xend <- xstart + 1/sqrt(N)
-    yend <- ystart + 1/sqrt(N)
+    xend <- xstart + increment
+    yend <- ystart + increment
     
     # using modulus so that points that "wrap around" are next to each other
     if (xend <= 1 & yend <= 1) {
@@ -56,6 +56,8 @@ subsets_method <- function(data, N, alpha, R=99) {
   }
   return(cbind(lower_approx, upper_approx))
 }
+
+low_intensity <- poisson_simulation_subsets(100,100,4,0.05)
 
 # performs better than paper
 coverage4 <- poisson_simulation_subsets(1000, 250, 4, 0.05)
