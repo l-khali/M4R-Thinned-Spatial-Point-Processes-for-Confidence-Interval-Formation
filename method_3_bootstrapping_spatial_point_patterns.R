@@ -37,7 +37,6 @@ subsets_method <- function(data, N, alpha, R=99) {
     
     window <- owin(c(0, increment), c(0,increment))
     subregion <- as.ppp(subregion, window)
-    plot(subregion)
     
     k <- Kest(subregion, r = seq(0.0, 0.14, 0.01), correction=c("isotropic"))
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
@@ -57,14 +56,10 @@ subsets_method <- function(data, N, alpha, R=99) {
   return(cbind(lower_approx, upper_approx))
 }
 
-low_intensity <- poisson_simulation_subsets(100,100,4,0.05)
+coverage_subsets_4 <- poisson_simulation_subsets(1000,250,4,0.05)
+plot(coverage_subsets_4)
 
-# performs better than paper
-coverage4 <- poisson_simulation_subsets(1000, 250, 4, 0.05)
-coverage16 <- poisson_simulation_subsets(1000, 250, 16, 0.05)
-# error when N is very large
-coverage64 <- poisson_simulation_subsets(1000, 250, 64, 0.05)
+coverage_subsets_16 <- poisson_simulation_subsets(1000,250,16,0.05)
+plot(coverage_subsets_16)
 
-plot(coverage4, ylim=c(0,1), main="Coverage for subsets, N=4")
-plot(coverage16, ylim=c(0,1), main="Coverage for subsets, N=16")
-plot(coverage64, ylim=c(0,1), main="Coverage for subsets, N=64")
+
