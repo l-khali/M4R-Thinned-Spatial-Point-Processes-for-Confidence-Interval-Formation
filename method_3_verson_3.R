@@ -1,12 +1,11 @@
 source("poisson_simulation_method_1.R")
 library(spatstat)
 
-subsets_method <- function(data, N, alpha, R=99) {
+subsets_method3 <- function(data, N, alpha, R=99) {
   
   increment <- 1/sqrt(N)
   # using same values for radius as paper for now
   r <- seq(0.0, 0.14, 0.01)
-  # K_actual <- rep(c(pi),each=15) * r * r
   k_vals <- data.frame(r)
   
   for (sim in 1:R) {
@@ -19,25 +18,26 @@ subsets_method <- function(data, N, alpha, R=99) {
     # using modulus so that points that "wrap around" are next to each other
     if (xend <= 1 & yend <= 1) {
       subregion <- as.data.frame(subset(data, xstart <= x & x < xend & ystart <= y & y < yend))
-      subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
-      subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
+      window <- owin(c(xstart,xend),c(ystart,yend))
     } else if (xend > 1 & yend <= 1) {
       subregion <- as.data.frame(subset(data, (xstart <= x | x < xend %% 1) & ystart <= y & y < yend))
-      subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
-      subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
+      window1 <- owin(c(xstart, 1), c(ystart, yend))
+      window2 <- owin(c(0,xend%%1), c(ystart, yend))
+      window <- union.owin(window1, window2)
     } else if (xend <= 1 & yend > 1) {
       subregion <- as.data.frame(subset(data, xstart <= x & x < xend & (ystart <= y | y < yend %% 1)))
-      subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
-      subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
+      window1 <- owin(c(xstart, xend), c(ystart, 1))
+      window2 <- owin(c(xstart,xend), c(0, yend%%1))
+      window <- union.owin(window1, window2)
     } else {
       subregion <- as.data.frame(subset(data, (xstart <= x | x < xend %% 1) & (ystart <= y | y < yend %% 1)))
-      subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
-      subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
+      window1 <- owin(c(xstart, 1), c(ystart, 1))
+      window2 <- owin(c(0,xend%%1), c(ystart, 1))
+      window3 <- owin(c(0,xend%%1), c(0,yend%%1))
+      window4 <- owin(c(xstart, 1), c(0,yend%%1))
+      window <- union.owin(window1,window2,window3,window4)
     }
-    
-    window <- owin(c(0, increment), c(0,increment))
     subregion <- as.ppp(subregion, window)
-    
     k <- Kest(subregion, r = seq(0.0, 0.14, 0.01), correction=c("isotropic"))
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
   }
@@ -56,10 +56,10 @@ subsets_method <- function(data, N, alpha, R=99) {
   return(cbind(lower_approx, upper_approx))
 }
 
-coverage_subsets_4 <- poisson_simulation_subsets(50,250,4,0.05)
-plot(coverage_subsets_4)
+coverage_subsets_4_v3 <- poisson_simulation_subsets3(100,250,4,0.05)
+plot(coverage_subsets_4_v3, ylim=c(0,1))
 
-coverage_subsets_16 <- poisson_simulation_subsets(1000,250,16,0.05)
-plot(coverage_subsets_16)
+coverage_subsets_16_v3 <- poisson_simulation_subsets3(100,250,16,0.05)
+plot(coverage_subsets_16_v3, ylim=c(0,1))
 
 

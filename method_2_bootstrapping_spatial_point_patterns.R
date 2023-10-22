@@ -51,7 +51,7 @@ tiling_method <- function(data, N, alpha, R=99) {
       }
     }
     
-    window <- owin( c(0, 1), c(0,1) )
+    window <- owin(c(0, 1), c(0,1))
     new_ppp <- as.ppp(new_process, window)
     
     k <- Kest(new_ppp, r = seq(0.0, 0.14, 0.01), correction=c("isotropic"))
@@ -73,24 +73,12 @@ tiling_method <- function(data, N, alpha, R=99) {
   return(cbind(lower_approx, upper_approx))
 }
 
-# performing similarly to the paper
-coverage <- poisson_simulation_tiling(1000, 250, 4, 0.05)
-plot(coverage, ylim=c(0,1), main="Coverage for tiling, N=4")
-
-coverage16 <- poisson_simulation_tiling(1000, 250, 16, 0.05)
-plot(coverage16, ylim=c(0,1), main="Coverage for tiling, N=16")
-
-coverage64 <- poisson_simulation_tiling(1000, 250, 64, 0.05)
-plot(coverage64, ylim=c(0,1), main="Coverage for tiling, N=64")
-
-#data <- rpoispp(250)
-#tiling_results <- tiling_method(data, 4, 0.05, 100)
-#r <- seq(0.0, 0.14, 0.01)
-#K_actual <- rep(c(pi),each=15) * r * r
-#coverage <- coverage_probability(tiling_results, K_actual)
-#plot(coverage)
-
-#plot(r, tiling_results[,1])
-#lines(r, tiling_results[,2])
-#lines(r, K_actual)
-  
+## performing similarly to the paper
+#coverage <- poisson_simulation_tiling(1000, 250, 4, 0.05)
+#plot(coverage, ylim=c(0,1), main="Coverage for tiling, N=4")
+#
+#coverage16 <- poisson_simulation_tiling(1000, 250, 16, 0.05)
+#plot(coverage16, ylim=c(0,1), main="Coverage for tiling, N=16")
+#
+#coverage64 <- poisson_simulation_tiling(1000, 250, 64, 0.05)
+#plot(coverage64, ylim=c(0,1), main="Coverage for tiling, N=64")

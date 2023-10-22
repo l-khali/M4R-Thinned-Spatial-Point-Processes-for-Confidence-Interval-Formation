@@ -1,7 +1,7 @@
 source("poisson_simulation_method_1.R")
 library(spatstat)
 
-marked_point_method <- function(data, N, alpha, R) {
+marked_point_method <- function(data, N, alpha, R=99) {
   npoints <- nrow(as.data.frame(data))
   r <- t(as.data.frame(replicate(npoints,seq(0.0, 0.14, 0.01))))
   weights <- edge.Ripley(data,r)
@@ -81,5 +81,5 @@ marked_point_method <- function(data, N, alpha, R) {
   return(cbind(lower_approx, upper_approx))
 }
 
-coverage4 <- poisson_simulation_marked_point(10, 250, 4, 0.05)
-coverage16 <- poisson_simulation_marked_point(1000, 250, 16, 0.05)
+#coverage4 <- poisson_simulation_marked_point(10, 250, 4, 0.05)
+#coverage16 <- poisson_simulation_marked_point(1000, 250, 16, 0.05)
