@@ -7,6 +7,7 @@ marked_point_method <- function(data, N, alpha, R=99) {
   weights <- edge.Ripley(data,r)
   a <- 1/N
   increment <- 1/sqrt(N)
+  window <- owin(c(0, increment), c(0,increment))
   r_vector <- seq(0.0, 0.14, 0.01)
   k_vals <- data.frame(r_vector)
   
@@ -41,16 +42,16 @@ marked_point_method <- function(data, N, alpha, R=99) {
     
     # using modulus so that points that "wrap around" are next to each other
     if (xend <= 1 & yend <= 1) {
-      subregion <- as.data.frame(subset(data, xstart <= x & x < xend & ystart <= y & y < yend))
+      subregion <- as.data.frame(subset(data, (xstart <= x & x < xend) & (ystart <= y & y < yend)))
       subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
       subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
     } else if (xend > 1 & yend <= 1) {
-      subregion <- as.data.frame(subset(data, (xstart <= x | x < xend %% 1) & ystart <= y & y < yend))
+      subregion <- as.data.frame(subset(data, (xstart <= x | x < xend %% 1) & (ystart <= y & y < yend)))
       subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
-      subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
+      subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart)))
     } else if (xend <= 1 & yend > 1) {
-      subregion <- as.data.frame(subset(data, xstart <= x & x < xend & (ystart <= y | y < yend %% 1)))
-      subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart) %% 1))
+      subregion <- as.data.frame(subset(data, (xstart <= x & x < xend) & (ystart <= y | y < yend %% 1)))
+      subregion["x"] <- lapply(subregion["x"], function(x) ((x - xstart)))
       subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
     } else {
       subregion <- as.data.frame(subset(data, (xstart <= x | x < xend %% 1) & (ystart <= y | y < yend %% 1)))
@@ -58,10 +59,10 @@ marked_point_method <- function(data, N, alpha, R=99) {
       subregion["y"] <- lapply(subregion["y"], function(y) ((y - ystart) %% 1))
     }
     
-    window <- owin(c(0, increment), c(0,increment))
     subregion <- as.ppp(subregion, window)
-    plot(subregion)
     n <- nrow(as.data.frame(subregion))
+    
+    print(marks(subregion))
     
     k <- colSums(marks(subregion)) * a / (n*(n-1))
     k_vals <- cbind(k_vals, as.numeric(k))
@@ -73,13 +74,15 @@ marked_point_method <- function(data, N, alpha, R=99) {
   
   for (radius in 1:15) {
     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
-    lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
-    upper <- sorted_k_vals[(R+1)*(alpha/2)]
+    lower <- sorted_k_vals[round((R+1)*(1-alpha/2), digits=0)]
+    upper <- sorted_k_vals[round((R+1)*(alpha/2), digits=0)]
     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
   }
   return(cbind(lower_approx, upper_approx))
 }
 
-#coverage4 <- poisson_simulation_marked_point(10, 250, 4, 0.05)
-#coverage16 <- poisson_simulation_marked_point(1000, 250, 16, 0.05)
+marked4 <- poisson_simulation_marked_point(100, 250, 4, 0.05)
+plot(marked4[-1,], ylim=c(0.5,1), type="l", lty=3, main="Poisson: marked point")
+marked16 <- poisson_simulation_marked_point(100, 250, 16, 0.05)
+lines(marked16[-1,], ylim=c(0.5,1), type="l", lty=2, main="Poisson: marked point")

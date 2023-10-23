@@ -1,8 +1,12 @@
 library(spatstat)
-source("neymann_scott_simulation_function.R")
-source("method_1_version_2.R")
 
-
+soft_core_pdf <- function(r) {
+  if (0<=r & r<=0.05) {
+    return(800*r)
+  } else {
+    return(0)
+  }
+}
 
 simulate_soft_core <- function() {
   # Generate a Poisson point process
@@ -16,17 +20,27 @@ simulate_soft_core <- function() {
   dist_matrix <- crossdist(poisson_pp, poisson_pp)
   
   # Identify points with the minimum mark within the interaction radius
-  for (i in 1:npoints) {
-    # if we have iterated through all points, stop
+  i <- 1
+  while (i <= npoints(poisson_pp)) {
+    # if we have iterated through all points (because we are deleting as we go along), stop
     if (nrow(dist_matrix) < i) {
       break
     }
-    neighbors <- which(dist_matrix[i,] < 800*runif(1,0,0.05))
-    if (length(neighbors) > 1) {
-      min_neighbor <- neighbors[which.min(poisson_pp$marks[neighbors])]
-      poisson_pp <- poisson_pp[-min_neighbor, ]
-      dist_matrix <- dist_matrix[-min_neighbor,]
-      dist_matrix <- dist_matrix[,-min_neighbor]
+    neighbors <- which(dist_matrix[i,] < runif(1,0,40)/800)
+    if (length(neighbors) > 0) {
+      #min_neighbor <- neighbors[which.min(poisson_pp$marks[neighbors])]
+      #poisson_pp <- poisson_pp[-min_neighbor, ]
+      #dist_matrix <- dist_matrix[-min_neighbor,]
+      #dist_matrix <- dist_matrix[,-min_neighbor]
+      if (min(poisson_pp$marks[neighbors]) < poisson_pp$marks[i]) {
+        poisson_pp <- poisson_pp[-i,]
+        dist_matrix <- dist_matrix[-i,]
+        dist_matrix <- dist_matrix[,-i]
+      } else {
+      i <- i + 1
+      }
+    } else {
+      i <- i + 1
     }
   }
   
@@ -36,9 +50,24 @@ simulate_soft_core <- function() {
   return(poisson_pp)
 }
 
+
+soft_core_actual_k <- function() {
+  r <- seq(0.0, 0.14, 0.01)
+  k_vals <- data.frame(r)
+  for (i in 1:10) {
+    sim <- simulate_soft_core()
+    k_vals <- cbind(k_vals, Kest(sim, r = r, correction=c("isotropic"))$iso)
+  }
+  k_actual <- c()
+  for (radius in 1:length(r)) {
+    k_actual <- c(k_actual, mean(as.numeric(k_vals[radius,-1])))
+  }
+  return(k_actual)
+}
+
 sc_simulation_approximation <- function(nsim, lambda, nregions, alpha) {
   r <- seq(0.0, 0.14, 0.01)
-  K_actual <- rep(c(pi),each=15) * r * r
+  K_actual <- soft_core_actual_k()
   cover <- rep(c(0),each=15)
   coverage <- cbind(r, cover)
   for (i in 1:nsim) {
@@ -60,7 +89,7 @@ sc_simulation_approximation <- function(nsim, lambda, nregions, alpha) {
 
 sc_simulation_tiling <- function(nsim, lambda, nregions, alpha) {
   r <- seq(0.0, 0.14, 0.01)
-  K_actual <- rep(c(pi),each=15) * r * r
+  K_actual <- soft_core_actual_k()
   cover <- rep(c(0),each=15)
   coverage <- cbind(r, cover)
   for (i in 1:nsim) {
