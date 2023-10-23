@@ -86,9 +86,10 @@ marked_point_method2 <- function(data, N, alpha, R=99) {
   return(cbind(lower_approx, upper_approx))
 }
 
-marked4 <- poisson_simulation_marked_point2(1000, 250, 4, 0.05)
-plot(marked4[-1,], ylim=c(0,1), type="l", lty=3, main="Poisson: marked point")
-marked16 <- poisson_simulation_marked_point2(1000, 250, 16, 0.05)
-lines(marked16[-1,], ylim=c(0,1), type="l", lty=2, main="Poisson: marked point")
-marked64 <- poisson_simulation_marked_point2(1000, 250, 64, 0.05)
-lines(marked64[-1,], ylim=c(0,1), type="l", lty=1, main="Poisson: marked point")
+#marked4 <- poisson_simulation_marked_point2(1000, 250, 4, 0.05)
+#plot(marked4[-1,], ylim=c(0,1), type="l", lty=3, main="Poisson: marked point")
+#marked16 <- poisson_simulation_marked_point2(1000, 250, 16, 0.05)
+#lines(marked16[-1,], ylim=c(0,1), type="l", lty=2, main="Poisson: marked point")
+#marked64 <- poisson_simulation_marked_point2(1000, 250, 64, 0.05)
+#lines(marked64[-1,], ylim=c(0,1), type="l", lty=1, main="Poisson: marked point")
+
