@@ -34,7 +34,7 @@ ns_simulation_approximation <- function(nsim, lambda, nregions, alpha) {
     # generating matérn cluster field
     data <- rMatClust(25,0.1,10, win=owin(c(0,1),c(0,1)))
     
-    confidences <- approximation_method_2(data, nregions, alpha)
+    confidences <- approximation_method_3(data, nregions, alpha)
     for (j in 1:length(r)) {
       if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
         coverage[j,2] <- coverage[j,2] + 1/nsim

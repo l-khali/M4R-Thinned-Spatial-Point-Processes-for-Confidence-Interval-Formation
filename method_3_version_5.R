@@ -65,14 +65,14 @@ subsets_method5 <- function(data, N, alpha, R=99) {
   return(cbind(lower_approx, upper_approx))
 }
 
-subsets4v5 <- poisson_simulation_subsets5(1000,250,4,0.05)
+#subsets4v5 <- poisson_simulation_subsets5(1000,250,4,0.05)
 
-subsets16v5 <- poisson_simulation_subsets5(1000,250,16,0.05)
+#subsets16v5 <- poisson_simulation_subsets5(1000,250,16,0.05)
 
-subsets64v5 <- poisson_simulation_subsets5(1000,250,64,0.05)
+#subsets64v5 <- poisson_simulation_subsets5(1000,250,64,0.05)
 
-png(file="~/Documents/year_4/m4r_spatial_stats/initial_plots/working/poisson_subsets_1000.png",width=600, height=600)
-plot(subsets4v5[-1,], ylim=c(0.5,1), type="l", lty=3, main="Poisson: subsets")
-lines(subsets16v5[-1,], ylim=c(0.5,1), type="l", lty=2)
-lines(subsets64v5[-1,], ylim=c(0.5,1), type="l", lty=1)
-dev.off()
+#png(file="~/Documents/year_4/m4r_spatial_stats/initial_plots/working/poisson_subsets_1000.png",width=600, height=600)
+#plot(subsets4v5[-1,], ylim=c(0.5,1), type="l", lty=3, main="Poisson: subsets")
+#lines(subsets16v5[-1,], ylim=c(0.5,1), type="l", lty=2)
+#lines(subsets64v5[-1,], ylim=c(0.5,1), type="l", lty=1)
+#dev.off()

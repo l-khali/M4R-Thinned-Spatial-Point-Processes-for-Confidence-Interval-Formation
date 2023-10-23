@@ -1,5 +1,6 @@
 library(spatstat)
 
+
 approximation_method_3 <- function(data, N, alpha) {
   # assume N is a square integer
   # assume data is a ppp object

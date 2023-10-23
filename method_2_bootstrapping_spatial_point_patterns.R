@@ -1,4 +1,3 @@
-source("poisson_simulation_method_1.R")
 library(spatstat)
 
 tiling_method <- function(data, N, alpha, R=99) {
