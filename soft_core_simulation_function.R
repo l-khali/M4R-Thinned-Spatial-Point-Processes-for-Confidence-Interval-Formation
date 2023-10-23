@@ -26,7 +26,8 @@ simulate_soft_core <- function() {
     if (nrow(dist_matrix) < i) {
       break
     }
-    neighbors <- which(dist_matrix[i,] < runif(1,0,40)/800)
+    # using inverse sampling method:
+    neighbors <- which(dist_matrix[i,] < sqrt(runif(1,0,0.05)/400))
     if (length(neighbors) > 0) {
       #min_neighbor <- neighbors[which.min(poisson_pp$marks[neighbors])]
       #poisson_pp <- poisson_pp[-min_neighbor, ]
