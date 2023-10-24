@@ -1,5 +1,4 @@
 library(spatstat)
-source("method_4_version_2.R")
 
 soft_core_pdf <- function(r) {
   if (0<=r & r<=0.05) {
@@ -147,6 +146,27 @@ sc_simulation_marked <- function(nsim, lambda, nregions, alpha) {
     data <- simulate_soft_core()
     
     confidences <- marked_point_method2(data, nregions, alpha)
+    for (j in 1:length(r)) {
+      if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
+        coverage[j,2] <- coverage[j,2] + 1/nsim
+      }
+    }
+  }
+  return(coverage)
+}
+
+sc_simulation_thinning <- function(nsim, lambda, thinning_param, alpha, R=99) {
+  r <- seq(0.0, 0.14, 0.01)
+  K_actual <- soft_core_actual_k()
+  cover <- rep(c(0),each=15)
+  coverage <- cbind(r, cover)
+  for (i in 1:nsim) {
+    print(paste0("Current simulation:",i))
+    
+    # generating softcore process
+    data <- simulate_soft_core()
+    
+    confidences <- thinning(data, thinning_param, alpha, R=R)
     for (j in 1:length(r)) {
       if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
         coverage[j,2] <- coverage[j,2] + 1/nsim
