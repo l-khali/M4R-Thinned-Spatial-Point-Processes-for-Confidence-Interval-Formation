@@ -1,0 +1,48 @@
+thinning_sv_09 <- poisson_simulation_thinning_sv(100, 250, 0.9, 0.05)
+thinning_sv_08 <- poisson_simulation_thinning_sv(100, 250, 0.8, 0.05)
+thinning_sv_07 <- poisson_simulation_thinning_sv(100, 250, 0.7, 0.05)
+thinning_sv_06 <- poisson_simulation_thinning_sv(100, 250, 0.6, 0.05)
+thinning_sv_05 <- poisson_simulation_thinning_sv(100, 250, 0.5, 0.05)
+thinning_sv_04 <- poisson_simulation_thinning_sv(100, 250, 0.4, 0.05)
+thinning_sv_03 <- poisson_simulation_thinning_sv(100, 250, 0.3, 0.05)
+thinning_sv_02 <- poisson_simulation_thinning_sv(100, 250, 0.2, 0.05)
+thinning_sv_01 <- poisson_simulation_thinning_sv(100, 250, 0.1, 0.05)
+
+plot(thinning_sv_09[-1,], ylim=c(0.5,1), type="l", col=1)
+lines(thinning_sv_08[-1,], type="l", col=2)
+lines(thinning_sv_07[-1,], type="l", col=3)
+lines(thinning_sv_06[-1,], type="l", col=4)
+lines(thinning_sv_05[-1,], type="l", col=5)
+lines(thinning_sv_04[-1,], type="l", col=6)
+lines(thinning_sv_03[-1,], type="l", col=7)
+lines(thinning_sv_02[-1,], type="l", col=8)
+lines(thinning_sv_01[-1,], type="l", col=9)
+legend(0.01, 0.72, legend=c("0.1", " 0.2", "0.3","0.4","0.5", "0.6", "0.7", "0.8", "0.9"),
+       col=c(9,8,7,6,5,4,3,2,1), lty =1, cex=0.7)
+abline(h = 0.95, col=1, lty=2)
+
+
+
+sc_thinning_sv_09 <- sc_simulation_thinning_sv(100, 250, 0.9, 0.05)
+sc_thinning_sv_08 <- sc_simulation_thinning_sv(100, 250, 0.8, 0.05)
+sc_thinning_sv_07 <- sc_simulation_thinning_sv(100, 250, 0.7, 0.05)
+sc_thinning_sv_06 <- sc_simulation_thinning_sv(100, 250, 0.6, 0.05)
+sc_thinning_sv_05 <- sc_simulation_thinning_sv(100, 250, 0.5, 0.05)
+sc_thinning_sv_04 <- sc_simulation_thinning_sv(100, 250, 0.4, 0.05)
+sc_thinning_sv_03 <- sc_simulation_thinning_sv(100, 250, 0.3, 0.05)
+sc_thinning_sv_02 <- sc_simulation_thinning_sv(100, 250, 0.2, 0.05)
+sc_thinning_sv_01 <- sc_simulation_thinning_sv(100, 250, 0.1, 0.05)
+
+plot(sc_thinning_sv_09[-1,], ylim=c(0.5,1), type="l", col=1)
+lines(sc_thinning_sv_08[-1,], type="l", col=2)
+lines(sc_thinning_sv_07[-1,], type="l", col=3)
+lines(sc_thinning_sv_06[-1,], type="l", col=4)
+lines(sc_thinning_sv_05[-1,], type="l", col=5)
+lines(sc_thinning_sv_04[-1,], type="l", col=6)
+lines(sc_thinning_sv_03[-1,], type="l", col=7)
+lines(sc_thinning_sv_02[-1,], type="l", col=8)
+lines(sc_thinning_sv_01[-1,], type="l", col=9)
+legend(0.01, 0.72, legend=c("0.1", " 0.2", "0.3","0.4","0.5", "0.6", "0.7", "0.8", "0.9"),
+       col=c(9,8,7,6,5,4,3,2,1), lty =1, cex=0.7)
+abline(h = 0.95, col=1, lty=2)
+

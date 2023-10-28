@@ -1,6 +1,7 @@
 library(spatstat)
 
 thinning <- function(data, thinning_param, alpha, R=99) {
+  # confidence intervals calculated using quantiles of samples
   process_df <- as.data.frame(data)
   npoints <- nrow(process_df)
   r <- seq(0.0, 0.14, 0.01)
@@ -58,3 +59,36 @@ lines(thinning_02[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning"
 lines(thinning_01[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=9)
 legend(0.12, 0.75, legend=c("0.9", "0.8", "0.7", "0.6", "0.5", "0.4", "0.3", "0.2", "0.1"),
        col=c(1,2,3,4,5,6,7,8,9), lty =1, cex=0.8)
+
+
+thinning_sample_var <- function(data, thinning_param, alpha, R=99) {
+  # confidence intervals calculated using sample variance
+  process_df <- as.data.frame(data)
+  npoints <- nrow(process_df)
+  r <- seq(0.0, 0.14, 0.01)
+  k_vals <- data.frame(r)
+  for (i in 1:R) {
+    unif <- runif(npoints, 0, 1)
+    subprocess_df <- process_df[which(unif < thinning_param),]
+    subprocess <- as.ppp(subprocess_df, owin(c(0,1),c(0,1)))
+    k <- Kest(subprocess, r=r, correction=c("isotropic"))
+    k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
+  }
+  
+  scaler <- scaling_constant(thinning_param, 250, mean=TRUE)
+  K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
+  t <- qt((1-alpha/2), df = R - 1)
+  
+  lower_approx <- c()
+  upper_approx <- c()
+  
+  for (radius in 1:15) {
+    sample_variance <- var(as.numeric(k_vals[radius,-1]))
+    lower_approx <- c(lower_approx, K_est[radius,] - t * sqrt(sample_variance/scaler))
+    upper_approx <- c(upper_approx, K_est[radius,] + t * sqrt(sample_variance/scaler))
+  }
+  return(cbind(lower_approx, upper_approx)) 
+}
+
+
+

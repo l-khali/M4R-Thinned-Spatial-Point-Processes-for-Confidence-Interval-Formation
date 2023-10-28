@@ -175,3 +175,24 @@ sc_simulation_thinning <- function(nsim, lambda, thinning_param, alpha, R=99) {
   }
   return(coverage)
 }
+
+sc_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R=99) {
+  r <- seq(0.0, 0.14, 0.01)
+  K_actual <- soft_core_actual_k()
+  cover <- rep(c(0),each=15)
+  coverage <- cbind(r, cover)
+  for (i in 1:nsim) {
+    print(paste0("Current simulation:",i))
+    
+    # generating softcore process
+    data <- simulate_soft_core()
+    
+    confidences <- thinning_sample_var(data, thinning_param, alpha, R=99)
+    for (j in 1:length(r)) {
+      if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
+        coverage[j,2] <- coverage[j,2] + 1/nsim
+      }
+    }
+  }
+  return(coverage)
+}
