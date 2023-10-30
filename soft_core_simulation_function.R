@@ -59,7 +59,7 @@ simulate_soft_core <- function() {
 soft_core_actual_k <- function() {
   r <- seq(0.0, 0.14, 0.01)
   k_vals <- data.frame(r)
-  for (i in 1:10) {
+  for (i in 1:1000) {
     sim <- simulate_soft_core()
     k_vals <- cbind(k_vals, Kest(sim, r = r, correction=c("isotropic"))$iso)
   }
