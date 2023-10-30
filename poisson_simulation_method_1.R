@@ -1,10 +1,10 @@
 library(spatstat)
 
-intensity <- function(x, y) {
+intensity2 <- function(x, y) {
   return(500*x)
 }
 
-intensity2 <- function(x,y) {
+intensity <- function(x,y) {
   return(240 + 20*x)
 }
 
