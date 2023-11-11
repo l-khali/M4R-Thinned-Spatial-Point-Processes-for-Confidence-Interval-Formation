@@ -79,7 +79,7 @@ thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
   }
   
-  scaler <- scaling_constant(thinning_param, 250, mean=TRUE)
+  scaler <- scaling_constant_inhom(thinning_param, 250, mean=TRUE)
   if (inhomogenous) {
     K_est <- as.data.frame(Kinhom(data, lambda=intensity2, r=r, correction=c("isotropic")))["iso"]
   } else {
