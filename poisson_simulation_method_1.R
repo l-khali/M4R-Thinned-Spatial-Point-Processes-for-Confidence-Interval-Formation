@@ -306,7 +306,7 @@ K_actual_inhom <- function() {
   return(k_actual)
 }
 
-poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R = 99, inhomogenous = FALSE, scaler = 1) {
+poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R = 99, inhomogenous = FALSE) {
   r <- seq(0.0, 0.14, 0.01)
   if (inhomogenous) {
     K_actual <- K_actual_inhom()
@@ -315,19 +315,52 @@ poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, 
   }
   cover <- rep(c(0),each=15)
   coverage <- cbind(r, cover)
+  
+  scaler <- scaling_constant_inhom(thinning_param,intensity=intensity2, mean=TRUE)
+  
   for (i in 1:nsim) {
-    print(paste0("Current simulation:",i))
-    if (inhomogenous) {
-      data <- rpoispp(intensity2)
-    }else {
-      data <- rpoispp(lambda)
-    }
-    confidences <- thinning_sample_var(data, thinning_param, alpha, R = R, inhomogenous = inhomogenous, scaler = scaler)
-    for (j in 1:length(r)) {
-      if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
-        coverage[j,2] = coverage[j,2] + 1/nsim
-      }
-    }
+        tryCatch({print(paste0("Current simulation:",i))
+        if (inhomogenous) {
+          data <- rpoispp(intensity2)
+        }else {
+          data <- rpoispp(lambda)
+        }
+        confidences <- thinning_sample_var(data, thinning_param, alpha, R = R, inhomogenous = inhomogenous, scaler = scaler)
+        for (j in 1:length(r)) {
+          if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
+            coverage[j,2] = coverage[j,2] + 1/nsim
+          }
+        }}, warning = function(w) { print("A simulation didn't work! Maybe a block is empty?") })
   }
   return(coverage)
 }
+
+# poisson_simulation_thinning_L <- function(nsim, lambda, thinning_param, alpha, R = 99, inhomogenous = FALSE) {
+#   r <- seq(0.0, 0.14, 0.01)
+#   if (inhomogenous) {
+#     L_actual <- sqrt(K_actual_inhom()/pi)
+#   } else {
+#     L_actual <- sqrt((rep(c(pi),each=15) * r * r) / pi)
+#   }
+#   cover <- rep(c(0),each=15)
+#   coverage <- cbind(r, cover)
+#   
+#   scaler <- scaling_constant_inhom(thinning_param,intensity=intensity2, mean=TRUE)
+#   
+#   for (i in 1:nsim) {
+#     print(paste0("Current simulation:",i))
+#     if (inhomogenous) {
+#       data <- rpoispp(intensity2)
+#     }else {
+#       data <- rpoispp(lambda)
+#     }
+#     confidences <- thinning_sample_var(data, thinning_param, alpha, R = R, inhomogenous = inhomogenous, scaler = scaler)
+#     confidences_L <- sqrt(confidences/pi)
+#     for (j in 1:length(r)) {
+#       if (confidences_L[j,1] <= L_actual[j] & L_actual[j] <= confidences_L[j,2]) {
+#         coverage[j,2] = coverage[j,2] + 1/nsim
+#       }
+#     }
+#   }
+#   return(coverage)
+# }

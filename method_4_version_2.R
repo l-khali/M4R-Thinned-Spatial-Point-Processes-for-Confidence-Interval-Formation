@@ -32,7 +32,7 @@ marked_point_method2 <- function(data, N, alpha, R=99) {
   }
   marks(data) <- marks
   
-  # assuming that confence intervals formed in the same way as subsets method
+  # assuming that confidence intervals formed in the same way as subsets method
   for (sim in 1:R) {
     n_sum <- 0
     k_vals_current <- data.frame(rep(c(0), each=15))
