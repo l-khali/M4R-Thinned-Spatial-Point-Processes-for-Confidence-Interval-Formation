@@ -35,7 +35,7 @@ thinning_sv_03_inhom <- poisson_simulation_thinning_sv(100, 250, 0.3, 0.05, inho
 thinning_sv_02_inhom <- poisson_simulation_thinning_sv(100, 250, 0.2, 0.05, inhomogenous = TRUE)
 thinning_sv_01_inhom <- poisson_simulation_thinning_sv(100, 250, 0.1, 0.05, inhomogenous = TRUE)
 
-plot(thinning_sv_09_inhom[-1,], ylim=c(0,1), type="l", col=1, main="Inhomogenous Poisson: Thinning (using Loh bootstrapping, N=16)")
+plot(thinning_sv_09_inhom[-1,], ylim=c(0,1), type="l", col=1, main="Inhomogenous Poisson: Thinning (using Loh bootstrapping, N=4)")
 lines(thinning_sv_08_inhom[-1,], type="l", col=2)
 lines(thinning_sv_07_inhom[-1,], type="l", col=3)
 lines(thinning_sv_06_inhom[-1,], type="l", col=4)
@@ -44,6 +44,31 @@ lines(thinning_sv_04_inhom[-1,], type="l", col=6)
 lines(thinning_sv_03_inhom[-1,], type="l", col=7)
 lines(thinning_sv_02_inhom[-1,], type="l", col=8)
 lines(thinning_sv_01_inhom[-1,], type="l", col=9)
+legend(0.01, 0.4, legend=c("0.1", " 0.2", "0.3","0.4","0.5", "0.6", "0.7", "0.8", "0.9"),
+       col=c(9,8,7,6,5,4,3,2,1), lty =1, cex=0.7)
+abline(h = 0.95, col=1, lty=2)
+
+# inhomogenous poisson simulations using kernel smoothed intensity
+
+thinning_sv_09_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.9, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_08_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.8, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_07_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.7, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_06_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.6, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_05_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.5, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_04_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.4, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_03_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.3, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_02_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.2, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+thinning_sv_01_inhom_est <- poisson_simulation_thinning_sv(100, 250, 0.1, 0.05, inhomogenous = TRUE, intensity_est = TRUE)
+
+plot(thinning_sv_09_inhom_est[-1,], ylim=c(0,1), type="l", col=1, main="Inhomogenous Poisson: Thinning (using kernel smoothed intensity)")
+lines(thinning_sv_08_inhom_est[-1,], type="l", col=2)
+lines(thinning_sv_07_inhom_est[-1,], type="l", col=3)
+lines(thinning_sv_06_inhom_est[-1,], type="l", col=4)
+lines(thinning_sv_05_inhom_est[-1,], type="l", col=5)
+lines(thinning_sv_04_inhom_est[-1,], type="l", col=6)
+lines(thinning_sv_03_inhom_est[-1,], type="l", col=7)
+lines(thinning_sv_02_inhom_est[-1,], type="l", col=8)
+lines(thinning_sv_01_inhom_est[-1,], type="l", col=9)
 legend(0.01, 0.4, legend=c("0.1", " 0.2", "0.3","0.4","0.5", "0.6", "0.7", "0.8", "0.9"),
        col=c(9,8,7,6,5,4,3,2,1), lty =1, cex=0.7)
 abline(h = 0.95, col=1, lty=2)

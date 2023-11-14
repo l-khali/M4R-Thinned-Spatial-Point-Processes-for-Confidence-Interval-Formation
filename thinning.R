@@ -61,7 +61,7 @@ legend(0.12, 0.75, legend=c("0.9", "0.8", "0.7", "0.6", "0.5", "0.4", "0.3", "0.
        col=c(1,2,3,4,5,6,7,8,9), lty =1, cex=0.8)
 
 
-thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=FALSE, scaler = 1) {
+thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=FALSE, scaler = 1, intensity_est = FALSE) {
   # confidence intervals calculated using sample variance
   process_df <- as.data.frame(data)
   npoints <- nrow(process_df)
@@ -72,7 +72,11 @@ thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=
     subprocess_df <- process_df[which(unif < thinning_param),]
     subprocess <- as.ppp(subprocess_df, owin(c(0,1),c(0,1)))
     if (inhomogenous) {
-      k <- Kinhom(subprocess, lambda=intensity2, r=r, correction=c("isotropic"))
+      if (intensity_est) {
+        k <- Kinhom(subprocess, r=r, correction=c("isotropic"))
+      } else {
+        k <- Kinhom(subprocess, lambda=intensity2, r=r, correction=c("isotropic"))
+      }
     } else {
       k <- Kest(subprocess, r=r, correction=c("isotropic"))
     }

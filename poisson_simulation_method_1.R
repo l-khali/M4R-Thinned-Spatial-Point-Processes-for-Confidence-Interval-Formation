@@ -306,7 +306,7 @@ K_actual_inhom <- function() {
   return(k_actual)
 }
 
-poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R = 99, inhomogenous = FALSE) {
+poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R = 99, inhomogenous = FALSE, intensity_est = FALSE) {
   r <- seq(0.0, 0.14, 0.01)
   if (inhomogenous) {
     K_actual <- K_actual_inhom()
@@ -325,7 +325,7 @@ poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, 
         }else {
           data <- rpoispp(lambda)
         }
-        confidences <- thinning_sample_var(data, thinning_param, alpha, R = R, inhomogenous = inhomogenous, scaler = scaler)
+        confidences <- thinning_sample_var(data, thinning_param, alpha, R = R, inhomogenous = inhomogenous, scaler = scaler, intensity_est = intensity_est)
         for (j in 1:length(r)) {
           if (confidences[j,1] <= K_actual[j] & K_actual[j] <= confidences[j,2]) {
             coverage[j,2] = coverage[j,2] + 1/nsim
