@@ -20,15 +20,16 @@ efron_2 <- function(thinning_param = 0.5, B = 50, n = 13) {
     bootstrapped_Rs <- c(bootstrapped_Rs, exp(bootstrap_t - theta_F))
     thinned_Rs <- c(thinned_Rs, exp(thinned_t - theta_F))
   }
-  c1 <- rgb(255,0,0,max = 255, alpha = 90, names = "lt.blue")
-  c2 <- rgb(0,255,0, max = 255, alpha = 90, names = "lt.pink")
-  
-  # boot_hist <- hist(bootstrapped_Rs, plot = FALSE)
-  # thin_hist <- hist(thinned_Rs, plot = FALSE)
-  # plot(boot_hist, col = c1, xlim=c(-0.5,0.5), ylim=c(0,15), freq=FALSE, main=paste("thinning parameter =", thinning_param))
-  # plot(thin_hist, col = c2, add=TRUE, xlim=c(-0.5,0.5), ylim=c(0,20), freq=FALSE)
-  qqplot(bootstrapped_Rs, thinned_Rs, main=paste("thinning parameter =", thinning_param))
-  abline(0, 1, col = 'red')
+  # c1 <- rgb(255,0,0,max = 255, alpha = 90, names = "lt.blue")
+  # c2 <- rgb(0,255,0, max = 255, alpha = 90, names = "lt.pink")
+  # 
+  # # boot_hist <- hist(bootstrapped_Rs, plot = FALSE)
+  # # thin_hist <- hist(thinned_Rs, plot = FALSE)
+  # # plot(boot_hist, col = c1, xlim=c(-0.5,0.5), ylim=c(0,15), freq=FALSE, main=paste("thinning parameter =", thinning_param))
+  # # plot(thin_hist, col = c2, add=TRUE, xlim=c(-0.5,0.5), ylim=c(0,20), freq=FALSE)
+  # qqplot(bootstrapped_Rs, thinned_Rs, main=paste("thinning parameter =", thinning_param))
+  # abline(0, 1, col = 'red')
+  return(thinned_Rs)
 }
 
 par(mfrow = c(2, 5))

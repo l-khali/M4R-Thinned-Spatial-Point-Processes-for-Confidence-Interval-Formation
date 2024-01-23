@@ -11,8 +11,9 @@ exponential_experiment <- function(thinning_param = 0.5, N = 100, B = 10000) {
     thinned_estimates <- c(thinned_estimates, mean(thinned))
   }
   
-  qqplot(bootstrapped_estimates, thinned_estimates, main=paste("Exponential, thinning parameter =", thinning_param))
-  abline(0, 1, col = 'red')
+  # qqplot(bootstrapped_estimates, thinned_estimates, main=paste("Exponential, thinning parameter =", thinning_param))
+  # abline(0, 1, col = 'red')
+  return(thinned_estimates)
 }
 
 par(mfrow = c(2, 5))

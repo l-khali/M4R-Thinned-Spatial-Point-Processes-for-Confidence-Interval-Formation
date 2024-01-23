@@ -10,9 +10,10 @@ poisson_experiment <- function(thinning_param = 0.5, N = 100, B = 10000, lambda 
     thinned <- population[which(rand < thinning_param)]
     thinned_estimates <- c(thinned_estimates, mean(thinned))
   }
+  return(thinned_estimates)
+  # qqplot(bootstrapped_estimates, thinned_estimates, main=paste("Poisson, thinning parameter =", thinning_param))
+  # abline(0, 1, col = 'red')
   
-  qqplot(bootstrapped_estimates, thinned_estimates, main=paste("Poisson, thinning parameter =", thinning_param))
-  abline(0, 1, col = 'red')
 }
 
 par(mfrow = c(2, 5))
