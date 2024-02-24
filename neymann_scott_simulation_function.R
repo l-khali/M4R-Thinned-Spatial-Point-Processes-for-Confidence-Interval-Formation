@@ -2,7 +2,7 @@ library(spatstat)
 source("method_2_bootstrapping_spatial_point_patterns.R")
 source("method_4_bootstrapping_spatial_processes.R")
 
-# uniformly generated sampleson a disc
+# uniformly generated samples on a disc
 #nclust <-  function(x0, y0, radius) {
 #  n <- rpois(1,10)
 #  return(runifdisc(n, radius, centre=c(x0, y0)))

@@ -2,7 +2,7 @@ library(spatstat)
 library(hash)
 
 K_var <- function(radius, npoints, window = owin(c(0,1),c(0,1))) {
-  # assuming window is unit square
+  # This is the variance of K on homogenous data as stated in Lagache, 2013, pg2
   omega <- area(window)
   beta <- pi * (radius^2) / omega
   gamma <- perimeter(window) * radius / omega

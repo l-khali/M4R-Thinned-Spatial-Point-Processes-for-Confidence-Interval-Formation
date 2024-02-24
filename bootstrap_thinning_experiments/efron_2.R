@@ -36,3 +36,4 @@ par(mfrow = c(2, 5))
 for (param in seq(0.1,1,0.1)) {
   efron_2(thinning_param = param, B=1000, n=50)
 }
+
