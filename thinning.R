@@ -1,6 +1,21 @@
 library(spatstat)
 
+library(rstudioapi)
+library(docstring)
+
 thinning <- function(data, thinning_param, alpha, R=99) {
+  #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
+  #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
+  #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
+  #' calculate the confidence intervals.
+  #' 
+  #' thinning_param: determines what proportion of the samples are retained
+  #' during thinning
+  #' alpha: confidence level
+  #' R: the number of thinned samples to take in order to form confidence 
+  #' intervals
+  #' 
+
   # confidence intervals calculated using quantiles of samples
   process_df <- as.data.frame(data)
   npoints <- nrow(process_df)
