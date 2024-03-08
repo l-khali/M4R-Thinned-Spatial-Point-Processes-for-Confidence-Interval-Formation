@@ -41,7 +41,8 @@ sc_thinning_03 <- sc_simulation_thinning(500, 250,0.3,0.05)
 sc_thinning_02 <- sc_simulation_thinning(500, 250,0.2,0.05)
 sc_thinning_01 <- sc_simulation_thinning(500, 250,0.1,0.05)
 
-plot(sc_thinning_09[-1,], type="l", lty=1, ylim=c(0.5,1), main="Soft core: thinning", col=1)
+par(mgp=c(2,1,0))  
+plot(sc_thinning_09[-1,], type="l", lty=1, ylim=c(0.5,1), col=1, xlab="Radius", ylab="Confidence Interval Cover")
 lines(sc_thinning_08[-1,], type="l", lty=1, ylim=c(0.5,1), col=2)
 lines(sc_thinning_07[-1,], type="l", lty=1, ylim=c(0.5,1), col=3)
 lines(sc_thinning_06[-1,], type="l", lty=1, ylim=c(0.5,1), col=4)
@@ -50,5 +51,8 @@ lines(sc_thinning_04[-1,], type="l", lty=1, ylim=c(0.5,1), col=6)
 lines(sc_thinning_03[-1,], type="l", lty=1, ylim=c(0.5,1), col=7)
 lines(sc_thinning_02[-1,], type="l", lty=1, ylim=c(0.5,1), col=8)
 lines(sc_thinning_01[-1,], type="l", lty=1, ylim=c(0.5,1), col=9)
-legend(0.12, 0.75, legend=c("0.9", "0.8", "0.7", "0.6", "0.5", "0.4", "0.3", "0.2", "0.1"),
+legend(0.11, 0.77, legend=c("p=0.9", "p=0.8", "p=0.7", "p=0.6", "p=0.5", "p=0.4", "p=0.3", "p=0.2", "p=0.1"),
        col=c(1,2,3,4,5,6,7,8,9), lty =1, cex=0.8)
+abline(h=0.95,lty=2)
+title("Cover on Unclustered Process", line = 0.3)
+

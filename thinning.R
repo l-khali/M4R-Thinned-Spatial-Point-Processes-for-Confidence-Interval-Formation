@@ -1,9 +1,10 @@
 library(spatstat)
-
+library(pracma)
+library(latex2exp)
 library(rstudioapi)
 library(docstring)
 
-thinning <- function(data, thinning_param, alpha, R=99) {
+# thinning <- function(data, thinning_param, alpha, R=99) {
   #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
   #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
   #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
@@ -16,59 +17,74 @@ thinning <- function(data, thinning_param, alpha, R=99) {
   #' intervals
   #' 
 
+# thinning <- function(data, thinning_param, alpha, R=99, W=1) {
+#   # confidence intervals calculated using quantiles of samples
+#   process_df <- as.data.frame(data)
+#   npoints <- nrow(process_df)
+#   r <- seq(0.0, 0.14, 0.01)
+#   k_vals <- data.frame(r)
+#   for (i in 1:R) {
+#     unif <- runif(npoints, 0, 1)
+#     subprocess_df <- process_df[which(unif < thinning_param),]
+#     subprocess <- as.ppp(subprocess_df, owin(c(0,W),c(0,W)))
+#     k <- Kest(subprocess, r=r, correction=c("isotropic"))
+#     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
+#   }
+#   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
+#   lower_approx <- c()
+#   upper_approx <- c()
+#   
+#   for (radius in 1:15) {
+#     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
+#     lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
+#     upper <- sorted_k_vals[(R+1)*(alpha/2)]
+#     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
+#     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
+#   }
+#   return(cbind(lower_approx, upper_approx)) 
+# }
+
+thinning <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.14, 0.01)) {
+  #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
+  #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
+  #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
+  #' calculate the confidence intervals.
+  #' 
+  #' thinning_param: determines what proportion of the samples are retained
+  #' during thinning
+  #' alpha: confidence level
+  #' R: the number of thinned samples to take in order to form confidence 
+  #' intervals
+  #' 
+  
   # confidence intervals calculated using quantiles of samples
   process_df <- as.data.frame(data)
   npoints <- nrow(process_df)
-  r <- seq(0.0, 0.14, 0.01)
+  # r <- seq(0.0, 0.14, 0.01)
   k_vals <- data.frame(r)
   for (i in 1:R) {
     unif <- runif(npoints, 0, 1)
     subprocess_df <- process_df[which(unif < thinning_param),]
-    subprocess <- as.ppp(subprocess_df, owin(c(0,1),c(0,1)))
+    subprocess <- as.ppp(subprocess_df, owin(c(0,W),c(0,W)))
     k <- Kest(subprocess, r=r, correction=c("isotropic"))
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
   }
   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
   lower_approx <- c()
   upper_approx <- c()
-  
-  for (radius in 1:15) {
+
+  for (radius in 1:length(r)) {
     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
     lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
     upper <- sorted_k_vals[(R+1)*(alpha/2)]
     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
   }
-  return(cbind(lower_approx, upper_approx)) 
+  print(upper_approx)
+  return(cbind(lower_approx, upper_approx))
 }
 
 
-thinning <- function(data, thinning_param, alpha, R=99) {
-  # confidence intervals calculated using quantiles of samples
-  process_df <- as.data.frame(data)
-  npoints <- nrow(process_df)
-  r <- seq(0.0, 0.14, 0.01)
-  k_vals <- data.frame(r)
-  for (i in 1:R) {
-    unif <- runif(npoints, 0, 1)
-    subprocess_df <- process_df[which(unif < thinning_param),]
-    subprocess <- as.ppp(subprocess_df, owin(c(0,1),c(0,1)))
-    k <- Kest(subprocess, r=r, correction=c("isotropic"))
-    k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
-  }
-  K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
-  lower_approx <- c()
-  upper_approx <- c()
-  
-  for (radius in 1:15) {
-    sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
-    lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
-    upper <- sorted_k_vals[(R+1)*(alpha/2)]
-    lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
-    upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
-  }
-  return(cbind(lower_approx, upper_approx)) 
-}
 
 
 thinning_1 <- poisson_simulation_thinning(500, 250, 1, 0.05)
@@ -92,18 +108,20 @@ plot(thinning_02[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (
 thinning_01 <- poisson_simulation_thinning(500, 250, 0.1, 0.05)
 plot(thinning_01[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.1)")
 
-plot(thinning_09[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=1)
-lines(thinning_08[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=2)
-lines(thinning_07[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=3)
-lines(thinning_06[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=4)
-lines(thinning_05[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=5)
-lines(thinning_04[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=6)
-lines(thinning_03[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=7)
-lines(thinning_02[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=8)
-lines(thinning_01[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning", col=9)
-legend(0.12, 0.75, legend=c("0.9", "0.8", "0.7", "0.6", "0.5", "0.4", "0.3", "0.2", "0.1"),
+par(mgp=c(2,1,0))  
+plot(thinning_09[-1,], type="l", lty=1, ylim=c(0.5,1), col=1, xlab="Radius", ylab="Confidence Interval Cover")
+lines(thinning_08[-1,], type="l", lty=1, ylim=c(0.5,1), col=2)
+lines(thinning_07[-1,], type="l", lty=1, ylim=c(0.5,1), col=3)
+lines(thinning_06[-1,], type="l", lty=1, ylim=c(0.5,1), col=4)
+lines(thinning_05[-1,], type="l", lty=1, ylim=c(0.5,1), col=5)
+lines(thinning_04[-1,], type="l", lty=1, ylim=c(0.5,1), col=6)
+lines(thinning_03[-1,], type="l", lty=1, ylim=c(0.5,1), col=7)
+lines(thinning_02[-1,], type="l", lty=1, ylim=c(0.5,1), col=8)
+lines(thinning_01[-1,], type="l", lty=1, ylim=c(0.5,1), col=9)
+legend(0.11, 0.77, legend=c("p=0.9 ", "p=0.8", "p=0.7", "p=0.6", "p=0.5", "p=0.4", "p=0.3", "p=0.2", "p=0.1"),
        col=c(1,2,3,4,5,6,7,8,9), lty =1, cex=0.8)
-
+abline(h=0.95,lty=2)
+title("Cover on Homogenous Poisson Process", line = 0.3)
 
 thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=FALSE, scaler = 1, intensity_est = FALSE) {
   # confidence intervals calculated using sample variance
