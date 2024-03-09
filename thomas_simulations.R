@@ -1,9 +1,10 @@
 library(spatstat)
+source("thinning.R")
 
 thomas_thinning_simulation <- function(nsim, thinning_param, alpha, kappa, scale, mu) {
   
   # specifying window sizes over which to simulate
-  Ws <- seq(1,20,1)
+  Ws <- seq(1,20,2)
   cover <- rep(c(0),each=length(Ws))
   coverage <- cbind(Ws, cover)
   # indexing radii to select radius of 0.1
@@ -15,7 +16,7 @@ thomas_thinning_simulation <- function(nsim, thinning_param, alpha, kappa, scale
     print(paste0("Current window length:", Ws[i]))
     for (sim in 1:nsim) {
       p <- rThomas(kappa, scale, mu, win=square(Ws[i]))
-      confidences <- thinning(p, thinning_param, alpha, W=Ws[i],r=c(0.0,0.1))
+      confidences <- thinning(p, thinning_param, alpha, W=Ws[i],r=c(0.0,0.05))
 
 
       if (confidences[j,1] <= K_actual & K_actual <= confidences[j,2]) {
@@ -25,3 +26,7 @@ thomas_thinning_simulation <- function(nsim, thinning_param, alpha, kappa, scale
   }
   return(coverage)
 }
+
+
+# the coverage resulting from these simulations is not good
+# this is because we require an iid underlying distribution

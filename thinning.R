@@ -3,46 +3,88 @@ library(pracma)
 library(latex2exp)
 library(rstudioapi)
 library(docstring)
+#' 
+#' # thinning <- function(data, thinning_param, alpha, R=99) {
+#'   #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
+#'   #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
+#'   #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
+#'   #' calculate the confidence intervals.
+#'   #' 
+#'   #' thinning_param: determines what proportion of the samples are retained
+#'   #' during thinning
+#'   #' alpha: confidence level
+#'   #' R: the number of thinned samples to take in order to form confidence 
+#'   #' intervals
+#'   #' 
+#' 
+#' # thinning <- function(data, thinning_param, alpha, R=99, W=1) {
+#' #   # confidence intervals calculated using quantiles of samples
+#' #   process_df <- as.data.frame(data)
+#' #   npoints <- nrow(process_df)
+#' #   r <- seq(0.0, 0.14, 0.01)
+#' #   k_vals <- data.frame(r)
+#' #   for (i in 1:R) {
+#' #     unif <- runif(npoints, 0, 1)
+#' #     subprocess_df <- process_df[which(unif < thinning_param),]
+#' #     subprocess <- as.ppp(subprocess_df, owin(c(0,W),c(0,W)))
+#' #     k <- Kest(subprocess, r=r, correction=c("isotropic"))
+#' #     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
+#' #   }
+#' #   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
+#' #   lower_approx <- c()
+#' #   upper_approx <- c()
+#' #   
+#' #   for (radius in 1:15) {
+#' #     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
+#' #     lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
+#' #     upper <- sorted_k_vals[(R+1)*(alpha/2)]
+#' #     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
+#' #     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
+#' #   }
+#' #   return(cbind(lower_approx, upper_approx)) 
+#' # }
+#' 
+#' thinning <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.14, 0.01)) {
+#'   #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
+#'   #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
+#'   #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
+#'   #' calculate the confidence intervals.
+#'   #' 
+#'   #' thinning_param: determines what proportion of the samples are retained
+#'   #' during thinning
+#'   #' alpha: confidence level
+#'   #' R: the number of thinned samples to take in order to form confidence 
+#'   #' intervals
+#'   #' 
+#'   
+#'   # confidence intervals calculated using quantiles of samples
+#'   process_df <- as.data.frame(data)
+#'   npoints <- nrow(process_df)
+#'   # r <- seq(0.0, 0.14, 0.01)
+#'   k_vals <- data.frame(r)
+#'   for (i in 1:R) {
+#'     unif <- runif(npoints, 0, 1)
+#'     subprocess_df <- process_df[which(unif < thinning_param),]
+#'     subprocess <- as.ppp(subprocess_df, owin(c(0,W),c(0,W)))
+#'     k <- Kest(subprocess, r=r, correction=c("isotropic"))
+#'     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
+#'   }
+#'   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
+#'   lower_approx <- c()
+#'   upper_approx <- c()
+#' 
+#'   for (radius in 1:length(r)) {
+#'     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
+#'     lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
+#'     upper <- sorted_k_vals[(R+1)*(alpha/2)]
+#'     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
+#'     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
+#'   }
+#'   print(upper_approx)
+#'   return(cbind(lower_approx, upper_approx))
+#' }
 
-# thinning <- function(data, thinning_param, alpha, R=99) {
-  #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
-  #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
-  #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
-  #' calculate the confidence intervals.
-  #' 
-  #' thinning_param: determines what proportion of the samples are retained
-  #' during thinning
-  #' alpha: confidence level
-  #' R: the number of thinned samples to take in order to form confidence 
-  #' intervals
-  #' 
 
-# thinning <- function(data, thinning_param, alpha, R=99, W=1) {
-#   # confidence intervals calculated using quantiles of samples
-#   process_df <- as.data.frame(data)
-#   npoints <- nrow(process_df)
-#   r <- seq(0.0, 0.14, 0.01)
-#   k_vals <- data.frame(r)
-#   for (i in 1:R) {
-#     unif <- runif(npoints, 0, 1)
-#     subprocess_df <- process_df[which(unif < thinning_param),]
-#     subprocess <- as.ppp(subprocess_df, owin(c(0,W),c(0,W)))
-#     k <- Kest(subprocess, r=r, correction=c("isotropic"))
-#     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
-#   }
-#   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
-#   lower_approx <- c()
-#   upper_approx <- c()
-#   
-#   for (radius in 1:15) {
-#     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
-#     lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
-#     upper <- sorted_k_vals[(R+1)*(alpha/2)]
-#     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
-#     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
-#   }
-#   return(cbind(lower_approx, upper_approx)) 
-# }
 
 thinning <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.14, 0.01)) {
   #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
@@ -70,17 +112,21 @@ thinning <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.14, 0.
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
   }
   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
+  print(length(k_vals))
   lower_approx <- c()
   upper_approx <- c()
 
   for (radius in 1:length(r)) {
     sorted_k_vals <- sort(as.numeric(k_vals[radius,-1]))
-    lower <- sorted_k_vals[(R+1)*(1-alpha/2)]
-    upper <- sorted_k_vals[(R+1)*(alpha/2)]
+    print(sorted_k_vals)
+    print(sorted_k_vals[floor((R+1)*(1-alpha/2))])
+    print(sorted_k_vals[ceiling((R+1)*(1-alpha/2))])
+    lower <- (sorted_k_vals[floor((R+1)*(1-alpha/2))] + sorted_k_vals[ceiling((R+1)*(1-alpha/2))])/2
+    upper <- (sorted_k_vals[floor((R+1)*(alpha/2))] + sorted_k_vals[ceiling((R+1)*(alpha/2))]) / 2
+    print(paste0("lower",lower))
     lower_approx <- c(lower_approx, 2*K_est[radius,] - lower)
     upper_approx <- c(upper_approx, 2*K_est[radius,] - upper)
   }
-  print(upper_approx)
   return(cbind(lower_approx, upper_approx))
 }
 
