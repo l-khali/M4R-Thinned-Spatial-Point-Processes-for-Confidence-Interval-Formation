@@ -28,7 +28,7 @@ approximation_method_3 <- function(data, N, alpha) {
   
   # calculation sample variance for each radius
   for (row in 1:nrow(k_vals)) {
-    variances <- c(variances, var(as.numeric(k_vals[row,-1])))
+    variances <- c(variances, var(as.numeric(k_vals[row,-1]))) # this variance is not correct I think (check report)
   }
   
   # ripley's K of entire region for each radius

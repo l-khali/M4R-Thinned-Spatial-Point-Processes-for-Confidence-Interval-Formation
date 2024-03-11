@@ -6,7 +6,7 @@ library(spatstat)
 poisson_expanding_window <- function(nsim, thinning_param, alpha, intensity) {
   
   # specifying window sizes over which to simulate
-  Ws <- seq(0.5,5,0.5)
+  Ws <- seq(0.5,2,0.2)
   cover <- rep(c(0),each=length(Ws))
   coverage <- cbind(Ws, cover)
   # indexing radii to select radius of 0.1
