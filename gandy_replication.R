@@ -54,3 +54,8 @@ plot(exp_cover25, ylim=c(0,1),type="l")
 lines(exp_cover5)
 lines(exp_cover75)
 abline(h=0.95,col=2,lty=2)
+
+
+
+
+
