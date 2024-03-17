@@ -55,14 +55,14 @@ poisson_bb_1d <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
   return(coverage)
 }
 
-asymptotic_cover_5 <- poisson_bb_1d(1000,0.5,0.05,10,R=999)
-plot(asymptotic_cover_5, main="Asymptotic Cover Using Thinning, p=0.5", xlab="n")
+asymptotic_cover_9_bb <- poisson_bb_1d(1000,0.9,0.05,10,R=500)
+plot(asymptotic_cover_9_bb, main="Asymptotic Cover Using Thinning, p=0.9", xlab="n", type="l")
 abline(h=0.95,col=2,lty=2)
 
-asymptotic_cover_5_var <- poisson_bb_1d(100,0.5,0.01,10,R=999)
+asymptotic_cover_5_var <- poisson_bb_1d(100,0.5,0.01,10,R=500)
 plot(asymptotic_cover_5_var)
 abline(h=0.95,col=2)
 
-asymptotic_cover_7_var <- poisson_bb_1d(100,0.7,0.05,10,R=999)
-plot(asymptotic_cover_7_var)
+asymptotic_cover_3_var <- poisson_bb_1d(100,0.3,0.05,10,R=500)
+plot(asymptotic_cover_3_var)
 abline(h=0.95,col=2)
