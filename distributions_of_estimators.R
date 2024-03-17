@@ -26,19 +26,21 @@ check_thinned_variance_1d <- function(thinning_param, intensity) {
 }
 
 thinning_params <- seq(0.1,0.9,0.1)
-thinned_sigmas <- c()
+thinned_sigmas_exp <- c()
 for (thinning_param in thinning_params) {
-  thinned_sigmas <- c(thinned_sigmas, check_thinned_variance_1d(thinning_param, 10))
+  thinned_sigmas_exp <- c(thinned_sigmas_exp, check_thinned_variance_1d(thinning_param, 10))
 }
 
 # hopefully the lines are very close
-plot(thinning_params, thinned_sigmas,type="l")
+plot(thinning_params, thinned_sigmas_exp,type="l")
 lines(thinning_params, sigma2*((1-thinning_params)/thinning_params))
 
 
-
-
-
+par(mfrow = c(1, 2))
+plot(thinning_params, thinned_sigmas_exp,type="l",col=2,xlab="p",ylab=TeX("Thinned Variance, ${sigma}_s$"), main="Exponential Distribution")
+lines(thinning_params, sigma2*((1-thinning_params)/thinning_params),col=3)
+plot(thinning_params, thinned_sigmas,type="l",col=2,xlab="p",ylab=TeX("Thinned Variance, ${sigma}_s$"), main="Homogenous Poisson")
+lines(thinning_params, sigma2_spatial*((1-thinning_params)/thinning_params),col=3)
 
 
 

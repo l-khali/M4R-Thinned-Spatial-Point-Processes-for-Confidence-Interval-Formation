@@ -25,12 +25,12 @@ thinning_sv_mean <- function(data, thinning_param, alpha, R=99, df=98) {
   mean_est <- mean(data)
   # scalar <- npoints*length(subprocess_df)/(npoints-length(subprocess_df))
   # scalar <- length(subprocess_df)/(npoints-length(subprocess_df))
-  scalar <- 1
+  scalar <- thinning_param/(1-thinning_param)
   # t <- qt((1-alpha/2), df = npoints/(npoints-length(subprocess_df)))
   t <- qt((1-alpha/2), df = 1/(1-thinning_param))
 
-  lower_approx <- mean(as.numeric(thinned_means)) - t*sqrt(var(as.numeric(thinned_means))/scalar)
-  upper_approx <- mean(as.numeric(thinned_means)) + t*sqrt(var(as.numeric(thinned_means))/scalar)
+  lower_approx <- mean(as.numeric(thinned_means)) - t*sqrt(var(as.numeric(thinned_means))*scalar)
+  upper_approx <- mean(as.numeric(thinned_means)) + t*sqrt(var(as.numeric(thinned_means))*scalar)
   # print(t*sqrt(var(as.numeric(thinned_means))/scalar))
 
   return(c(lower_approx,upper_approx))
@@ -38,10 +38,10 @@ thinning_sv_mean <- function(data, thinning_param, alpha, R=99, df=98) {
 
 
 
-poisson_sv_1d <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
+poisson_sv_1d <- function(nsim, thinning_param, alpha, intensity, R=99, df=98, max_n=10) {
   
   # specifying ns over which to simulate
-  ns <- c(1000,2000,3000)
+  ns <- 10*(2^(0:max_n))
   cover <- rep(c(0),each=length(ns))
   coverage <- cbind(ns, cover)
   
@@ -54,11 +54,14 @@ poisson_sv_1d <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
         coverage[i,2] <- coverage[i,2] + 1/nsim
       }
     }
-    # print(coverage[i,])
+  print(coverage[i,])
   }
-  # print(coverage)
+  print(coverage)
   return(coverage)
 }
 
-cover <- poisson_sv_1d(100,0.2,0.05,10, R=500)
+cover <- poisson_sv_1d(1000,0.9,0.05,10, R=500)
 plot(cover)
+cover25 <- poisson_sv_1d(1000,0.25,0.05,10, R=500)
+plot(cover25)
+
