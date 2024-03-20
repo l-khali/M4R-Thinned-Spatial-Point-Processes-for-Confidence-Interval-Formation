@@ -29,6 +29,7 @@ thinning_sv <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.1),
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
   }
   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
+  # print(K_est[2,])
   # scalar <- npoints*thinning_param/(1-thinning_param)
   # scalar <- npoints*nrow(subprocess_df)/(npoints-nrow(subprocess_df))
   scalar <- thinning_param^2
@@ -38,8 +39,8 @@ thinning_sv <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.1),
   upper_approx <- c()
   
   for (radius in 1:length(r)) {
-    lower_approx <- c(lower_approx, mean(as.numeric(k_vals[radius,-1])) - t*sqrt(var(as.numeric(k_vals[radius,-1]))*scalar))
-    upper_approx <- c(upper_approx, mean(as.numeric(k_vals[radius,-1])) + t*sqrt(var(as.numeric(k_vals[radius,-1]))*scalar))
+    lower_approx <- c(lower_approx, K_est[radius,] - t*sqrt(var(as.numeric(k_vals[radius,-1]))*scalar))
+    upper_approx <- c(upper_approx, K_est[radius,] + t*sqrt(var(as.numeric(k_vals[radius,-1]))*scalar))
   }
   return(cbind(lower_approx, upper_approx))
 }
@@ -49,7 +50,7 @@ thinning_sv <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.1),
 poisson_expanding_window_sv <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
   
   # specifying window sizes over which to simulate
-  Ws <- seq(0.5,3.5,0.2)
+  Ws <- seq(0.5,3,0.2)
   cover <- rep(c(0),each=length(Ws))
   coverage <- cbind(Ws, cover)
   # indexing radii to select radius of 0.1
@@ -62,9 +63,10 @@ poisson_expanding_window_sv <- function(nsim, thinning_param, alpha, intensity, 
     for (sim in 1:nsim) {
       p <- rpoispp(intensity, win=square(Ws[i]))
       confidences <- thinning_sv(p, thinning_param, alpha, W=Ws[i],r=c(0.0,0.1), R=R, df=df)
-      print(confidences[j,])
-      if (confidences[j,1] <= K_actual & K_actual <= confidences[j,2]) {
-        coverage[i,2] <- coverage[i,2] + 1/nsim
+      if (!is.na(confidences[j,1]) & !is.na(confidences[j,1])) {
+        if (confidences[j,1] <= K_actual & K_actual <= confidences[j,2]) {
+          coverage[i,2] <- coverage[i,2] + 1/nsim
+        }
       }
     }
     print(coverage[i,])
@@ -73,27 +75,49 @@ poisson_expanding_window_sv <- function(nsim, thinning_param, alpha, intensity, 
   return(coverage)
 }
 
-cover2 <- poisson_expanding_window_sv(100,0.2,0.05,250,R=50)
-plot(cover2, main="Scaled Conf Interval, df=R-1", type="l")
+cover25 <- poisson_expanding_window_sv(2000,0.25,0.05,250,R=1000)
+plot(cover25, type="l",ylim=c(0,1),xlab="",ylab="",lwd=2)
+title(mgp=c(2.5,0,0), xlab="Window Side length",ylab="Cover", font.main= 4)
+abline(h=0.95,col=2,lty=2,lwd=2)
+save(cover25, file = "scaled_hom_pois_25.RData")
 
-cover <- poisson_expanding_window_sv(1000,0.3,0.05,250,R=500)
-plot(cover, main="Scaled Conf Interval, df=R-1", type="l")
+# cover3 <- poisson_expanding_window_sv(1000,0.3,0.05,250,R=500)
+# plot(cover3, main="Scaled Conf Interval, df=R-1", type="l")
 
-cover5 <- poisson_expanding_window_sv(1000,0.5,0.05,250,R=500)
+cover5 <- poisson_expanding_window_sv(2000,0.5,0.05,250,R=1000)
+save(cover5, file = "scaled_hom_pois_5.RData")
 # cover5 <- cover5_df2
-plot(cover5, main="Scaled Conf Interval, df=R-1", type="l")
+plot(cover5, type="l",ylim=c(0,1),xlab="",ylab="",lwd=2)
+title(mgp=c(2.5,0,0), xlab="Window Side length",ylab="Cover", font.main= 4)
+abline(h=0.95,col=2,lty=2,lwd=2)
 
-cover9 <- poisson_expanding_window_sv(100,0.9,0.05,250,R=50)
-plot(cover9, main="Scaled Conf Interval, df=R-1", type="l")
+cover75 <- poisson_expanding_window_sv(2000,0.75,0.05,250,R=1000)
+plot(cover75, type="l",ylim=c(0,1),xlab="",ylab="",lwd=2)
+title(mgp=c(2.5,0,0), xlab="Window Side length",ylab="Cover", font.main= 4)
+abline(h=0.95,col=2,lty=2,lwd=2)
+save(cover75, file = "scaled_hom_pois_75.RData")
 
-cover2_df2 <- poisson_expanding_window_sv(100,0.2,0.05,250,R=50)
-plot(cover2_df2, main="Scaled Conf Interval, df=N/d", type="l")
+save(cover25,file="k_cover_scaled_25.RData")
+save(cover5,file="k_cover_scaled_5.RData")
+save(cover75,file="k_cover_scaled_75.RData")
 
-cover5_df2 <- poisson_expanding_window_sv(100,0.5,0.05,250,R=50) # actually with R-1 degrees of freedom
-plot(cover5_df2, main="Scaled Conf Interval, df=N/d", type="l")
+cover25_2 <- poisson_expanding_window_sv(100,0.25,0.05,250,R=50)
+cover5_2 <- poisson_expanding_window_sv(100,0.5,0.05,250,R=50)
+cover75_2 <- poisson_expanding_window_sv(100,0.75,0.05,250,R=50)
 
-cover9_df2 <- poisson_expanding_window_sv(100,0.9,0.05,250,R=50)
-plot(cover9_df2, main="Scaled Conf Interval, df=N/d", type="l")
+
+# cover9 <- poisson_expanding_window_sv(1000,0.9,0.05,250,R=500)
+# plot(cover9, main="Scaled Conf Interval, df=R-1", type="l")
+
+# using df = N/d
+# cover2_df2 <- poisson_expanding_window_sv(100,0.2,0.05,250,R=50)
+# plot(cover2_df2, main="Scaled Conf Interval, df=N/d", type="l")
+# 
+# cover5_df2 <- poisson_expanding_window_sv(100,0.5,0.05,250,R=50) # actually with R-1 degrees of freedom
+# plot(cover5_df2, main="Scaled Conf Interval, df=N/d", type="l")
+# 
+# cover9_df2 <- poisson_expanding_window_sv(100,0.9,0.05,250,R=50)
+# plot(cover9_df2, main="Scaled Conf Interval, df=N/d", type="l")
 
 
 # plotting final term which is not accounted for in the scaling
