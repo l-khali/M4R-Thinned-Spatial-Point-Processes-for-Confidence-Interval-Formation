@@ -41,10 +41,13 @@ for (thinning_param in thinning_params) {
 }
 
 par(mfrow = c(1, 1))
-# hopefully the lines are very close (not very good)
-plot(thinning_params, thinned_sigmas,type="l")
-lines(thinning_params, sigma2_spatial*((1-thinning_params)/thinning_params))
-abline(h=sigma2_spatial)
+# hopefully the lines are very close
+plot(thinning_params, thinned_sigmas,type="l",col=2,xlab=" ",ylab=" ",font.main=2,main=("Variance of Ripley's K Estimates"),lwd=1.5)
+title(mgp=c(2.5,0,0),xlab=TeX("Thinning parameter, $p$"),ylab=TeX(r'(Sample Variance, $\hat{\sigma}$)'))
+lines(thinning_params, sigma2_spatial/thinning_params^2, col=3,lwd=1.5)
+legend(0.7, 0.039, c(TeX(r'($\hat{\sigma}/p^2$)'), TeX(r'($\hat{sigma}_s$)')), col = c(3, 2), lty = c(1, 1),
+       merge = TRUE)
+# abline(h=sigma2_spatial)
 # lines(thinning_params, (true_k)*((1-thinning_params)/thinning_params))
 
 
@@ -66,13 +69,17 @@ for (thinning_param in thinning_params) {
   sigma2_theos_n <- c(sigma2_theos_n, sigma2_theo_n/(thinning_param^2))
 }
 
-plot(thinning_params, thinned_sigmas,type="l", col=2, xlab=TeX("$p$"))
-lines(thinning_params, sigma2_theos,col=3)
+# plot(thinning_params, thinned_sigmas,type="l", col=2, xlab=TeX("$p$"))
+# lines(thinning_params, sigma2_theos,col=3)
+# 
+# 
+# plot(thinning_params, thinned_sigmas,type="l", col=2, xlab=TeX("Thinning parameter, $p$"),ylab=TeX("Thinned Variance, ${sigma}_s$"),main=TeX("$Var(K_s)$ on Homogenous Poisson"))
+# lines(thinning_params, sigma2_theos_n,col=3)
+# 
+# plot(thinning_params, sigma2_theos,type="l", col=4, xlab=TeX("$p$"))
+# lines(thinning_params, sigma2_theos_n,col=3)
 
 
-plot(thinning_params, thinned_sigmas,type="l", col=2, xlab=TeX("$p$"))
-lines(thinning_params, sigma2_theos_n,col=3)
-
-plot(thinning_params, sigma2_theos,type="l", col=4, xlab=TeX("$p$"))
-lines(thinning_params, sigma2_theos_n,col=3)
+plot(thinning_params, thinned_sigmas,type="l", col=2, xlab=TeX("Thinning parameter, $p$"),ylab=TeX("Thinned Variance, ${sigma}_s$"),main=TeX("$Var(K_s)$ on Homogenous Poisson"))
+lines(thinning_params, sigma2_spatial/(thinning_params^2),col=3)
 

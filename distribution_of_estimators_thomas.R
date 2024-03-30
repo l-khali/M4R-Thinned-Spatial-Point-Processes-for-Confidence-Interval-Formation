@@ -43,7 +43,7 @@ for (thinning_param in thinning_params) {
 }
 
 plot(thinning_params,thinned_sigmas_thomas,type="l",col=2,lwd=1.5,main="Variance of Ripleys K on Thomas Process")
-lines(thinning_params,sigma2_spatial_thomas/thinning_params^2,col=3,lwd=1.5)
+lines(thinning_params,sigma2_spatial_thomas/(thinning_params*(1-thinning_params)),lwd=1.5)
 
 scalers <- sigma2_spatial_thomas/thinned_sigmas_thomas
 

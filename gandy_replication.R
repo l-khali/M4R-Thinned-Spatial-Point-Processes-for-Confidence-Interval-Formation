@@ -1,3 +1,6 @@
+library(pracma)
+library(latex2exp)
+
 ns <- c(10,20,40,80,160,320)
 intensity <- 10
 covers <- rep(0, length(ns))
@@ -22,7 +25,7 @@ plot(covers)
 
 gandy_asymptotics <- function(thinning_param, max_n) {
   # ns <- c(10,20,40,80,160,320,640,1280,2560,5120,10240)
-  ns <- 10*(2^0:max_n)
+  ns <- 10*(2^(0:max_n))
   intensity <- 10
   covers_thinning <- rep(0, length(ns))
   for (n in 1:length(ns)) {
@@ -47,7 +50,7 @@ gandy_asymptotics <- function(thinning_param, max_n) {
 }
 
 exp_cover25 <- gandy_asymptotics(0.25,10)
-exp_cover5 <- gandy_asymptotics(0.5,12)
+exp_cover5 <- gandy_asymptotics(0.5,10)
 exp_cover75 <- gandy_asymptotics(0.75,10)
 
 plot(exp_cover25, ylim=c(0,1),type="l")
@@ -55,7 +58,13 @@ lines(exp_cover5)
 lines(exp_cover75)
 abline(h=0.95,col=2,lty=2)
 
-
+par(mfrow = c(1, 3))
+plot(10*(2^(0:10)),exp_cover25, type="l", log='x', xlab="n", ylab="Cover", main=TeX("$p=0.25$"))
+abline(h=0.95,col=2,lty=2)
+plot(10*(2^(0:10)),exp_cover5, type="l", log='x', xlab="n", ylab="Cover", main=TeX("$p=0.5$"))
+abline(h=0.95,col=2,lty=2)
+plot(10*(2^(0:10)),exp_cover75, type="l", log='x', xlab="n", ylab="Cover", main=TeX("$p=0.75$"))
+abline(h=0.95,col=2,lty=2)
 
 
 
