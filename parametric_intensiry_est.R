@@ -16,12 +16,11 @@ inhom_pois_parametric_intensity <- function(data, thinning_param, alpha, W=1, a,
   # r <- seq(0.0, 0.14, 0.01)
   as <- c()
   bs <- c()
-  for (i in 1:R) {
+  for (j in 1:R) {
     unif <- runif(npoints(data), 0, 1)
     subprocessdf <- processdf[which(unif < thinning_param),]
     subp <- as.ppp(subprocessdf, W=square(W))
     fit <- ppm(subp ~ x)
-    print(coef(fit))
     as <- c(as, coef(fit)[1]) # need to divide the intercept by thinning parameter?
     bs <- c(bs, coef(fit)[2])
   }
@@ -56,7 +55,7 @@ inhom_pois_parametric_thinning <- function(nsim, thinning_param, alpha, a, b, R=
     return(exp(a+b*x))
   }
   
-  Ws <- seq(2,5,0.5)
+  Ws <- seq(0.1,1,0.2)
   cover <- rep(c(0),each=length(Ws))
   acoverage <- cbind(Ws, cover)
   bcoverage <- cbind(Ws, cover)
@@ -85,8 +84,8 @@ inhom_pois_parametric_thinning <- function(nsim, thinning_param, alpha, a, b, R=
   
 }
 
-parametric9 <- inhom_pois_parametric_thinning(10,0.9,0.05,1,3,R=50)
+parametric9 <- inhom_pois_parametric_thinning(1000,0.9,0.05,1,3,R=500)
 
-parametric5 <- inhom_pois_parametric_thinning(100,0.5,0.05,0.5,2,R=500)
+parametric5 <- inhom_pois_parametric_thinning(1000,0.5,0.05,1,3,R=500)
 
-parametric2 <- inhom_pois_parametric_thinning(10,0.2,0.05,1,3,R=50)
+parametric2 <- inhom_pois_parametric_thinning(1000,0.2,0.05,1,3,R=500)
