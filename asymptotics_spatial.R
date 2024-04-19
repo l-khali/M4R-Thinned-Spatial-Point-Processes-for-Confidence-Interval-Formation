@@ -10,10 +10,11 @@ thinning_jh <- function(data, thinning_param, alpha, R=99, radius = c(0,0.1)) {
   K_est <- K_est["iso"][2,1]
   js <- c()
   for (i in 1:R) {
-    unif <- runif(npoints, 0, 1)
-    subprocess_df <- process_df[which(unif < thinning_param),]
-    subprocess <- as.ppp(subprocess_df, owin(c(0,1),c(0,1)))
-    rs <- nrow(subprocess_df)
+    # unif <- runif(npoints, 0, 1)
+    # subprocess_df <- process_df[which(unif < thinning_param),]
+    # subprocess <- as.ppp(subprocess_df, owin(c(0,1),c(0,1)))
+    subprocess <- rthin(data, thinning_param)
+    rs <- npoints(subprocess)
     ds <- npoints - rs
     k <- Kest(subprocess, r=radius, correction=c("isotropic"))
     k_val <- as.data.frame(k)["iso"]
@@ -21,7 +22,7 @@ thinning_jh <- function(data, thinning_param, alpha, R=99, radius = c(0,0.1)) {
     js <- c(js, (k_val["iso"][2,1] - K_est)*sqrt(npoints * rs/ds))
   }
   k_vals[is.nan(k_vals)] <- 0 # subprocesses can have 0 points with low thinning param
-  js <- js / var(as.numeric(k_vals))
+  # js <- js / var(as.numeric(k_vals))
   return(js)
 }
 
@@ -44,8 +45,10 @@ for (thinning_param in c(0.25,0.5,0.75)) {
     normal_dist <- rnorm(R, 0, 1)
     print(paste("n", n,"length",length(p), "estimates",length(thinned_estimates)))
     # qqplot to observe convergence in distribution
-    qqplot(normal_dist, thinned_estimates, main=paste("p =", thinning_param, ", n =", npoint), ylab = "", xlab="")
-    qqline(thinned_estimates, distribution= function(p) qnorm(p, 0, 1), col = 2)
+    qqnorm(thinned_estimates, main=paste("p =", thinning_param, ", n =", npoint), ylab = "", xlab="")
+    qqline(thinned_estimates)
+    # qqplot(normal_dist, thinned_estimates, main=paste("p =", thinning_param, ", n =", npoint), ylab = "", xlab="")
+    # qqline(thinned_estimates, distribution= function(p) qnorm(p, 0, 1), col = 2)
   }
 }
 title("Homogenous Poisson Point Process",line=0.5,outer=TRUE, cex.main=1.5)

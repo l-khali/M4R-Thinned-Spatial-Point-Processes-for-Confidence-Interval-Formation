@@ -137,19 +137,19 @@ thinning_1 <- poisson_simulation_thinning(500, 250, 1, 0.05)
 plot(thinning_1[-1,], type="l", lty=1, ylim=c(0,1), main="Poisson: thinning (1.0)")
 thinning_09 <- poisson_simulation_thinning(500, 250, 0.9, 0.05)
 plot(thinning_09[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.9)")
-thinning_08 <- poisson_simulation_thinning(500, 250, 0.8, 0.05)
+thinning_08 <- poisson_simulation_thinning(1000, 250, 0.8, 0.05)
 plot(thinning_08[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.8)")
 thinning_07 <- poisson_simulation_thinning(500, 250, 0.7, 0.05)
 plot(thinning_07[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.7)")
 thinning_06 <- poisson_simulation_thinning(500, 250, 0.6, 0.05)
 plot(thinning_06[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.6)")
-thinning_05 <- poisson_simulation_thinning(500, 250, 0.5, 0.05)
+thinning_05 <- poisson_simulation_thinning(1000, 250, 0.5, 0.05)
 plot(thinning_05[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.5)")
 thinning_04 <- poisson_simulation_thinning(500, 250, 0.4, 0.05)
 plot(thinning_04[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.4)")
 thinning_03 <- poisson_simulation_thinning(500, 250, 0.3, 0.05)
 plot(thinning_03[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.3)")
-thinning_02 <- poisson_simulation_thinning(500, 250, 0.2, 0.05)
+thinning_02 <- poisson_simulation_thinning(1000, 250, 0.2, 0.05)
 plot(thinning_02[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.2)")
 thinning_01 <- poisson_simulation_thinning(500, 250, 0.1, 0.05)
 plot(thinning_01[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.1)")
@@ -168,6 +168,13 @@ legend(0.11, 0.77, legend=c("p=0.9 ", "p=0.8", "p=0.7", "p=0.6", "p=0.5", "p=0.4
        col=c(1,2,3,4,5,6,7,8,9), lty =1, cex=0.8)
 abline(h=0.95,lty=2)
 title("Cover on Homogenous Poisson Process", line = 0.3)
+
+thinning_08_2 <- thinning_08[-1,]
+thinning_05_2 <- thinning_05[-1,]
+thinning_02_2 <- thinning_02[-1,]
+save(thinning_08_2, file="thinning_08_naive")
+save(thinning_05_2, file="thinning_05_naive")
+save(thinning_02_2, file="thinning_02_naive")
 
 thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=FALSE, scaler = 1, intensity_est = FALSE) {
   # confidence intervals calculated using sample variance

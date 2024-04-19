@@ -41,7 +41,7 @@ poisson_expanding_window_bb_intensity <- function(nsim, thinning_param, alpha, i
   
   # specifying window sizes over which to simulate
   # Ws <- seq(0.5,5,0.5)
-  Ws <- seq(0.3,3,0.2)
+  Ws <- seq(0.5,2,0.25)
   cover <- rep(c(0),each=length(Ws))
   coverage <- cbind(Ws, cover)
   
@@ -60,10 +60,9 @@ poisson_expanding_window_bb_intensity <- function(nsim, thinning_param, alpha, i
   return(coverage)
 }
 
-intensity_bb_25_2 <- poisson_expanding_window_bb_intensity(5000,0.25,0.05,50,R=500)
-intensity_bb_5_2 <- poisson_expanding_window_bb_intensity(5000,0.5,0.05,50,R=500)
-intensity_bb_75_2 <- poisson_expanding_window_bb_intensity(5000,0.75,0.05,50,R=500)
-save(intensity_bb_25_2, file="intensity_bb_25_2.RData")
+intensity_bb_2_2 <- poisson_expanding_window_bb_intensity(1000,0.2,0.05,50,R=500)
+intensity_bb_5_2 <- poisson_expanding_window_bb_intensity(1000,0.5,0.05,50,R=500)
+intensity_bb_8_2 <- poisson_expanding_window_bb_intensity(1000,0.8,0.05,50,R=500)
+save(intensity_bb_2_2, file="intensity_bb_2_2.RData")
 save(intensity_bb_5_2, file="intensity_bb_5_2.RData")
-save(intensity_bb_75_2, file="intensity_bb_75_2.RData")
-
+save(intensity_bb_8_2, file="intensity_bb_8_2.RData")

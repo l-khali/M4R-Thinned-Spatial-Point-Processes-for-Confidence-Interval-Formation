@@ -19,21 +19,17 @@ thinning_sv_intensity <- function(data, thinning_param, alpha, R=99, W=1, r=seq(
   #' 
   
   # confidence intervals calculated using quantiles of samples
-  process_df <- as.data.frame(data)
-  npoints <- nrow(process_df)
-  # r <- seq(0.0, 0.14, 0.01)
   i_vals <- c()
   for (i in 1:R) {
-    unif <- runif(npoints, 0, 1)
-    subprocess_df <- process_df[which(unif < thinning_param),]
+    subp <- rthin(data,thinning_param)
     # subprocess <- as.ppp(subprocess_df, W=square(W))
-    i <- nrow(subprocess_df)/(W^2 * thinning_param)
+    i <- npoints(subp)/(W^2 * thinning_param)
     i_vals <- c(i_vals, i)
   }
   i_est <- npoints(data)/W^2
   # scalar <- npoints*thinning_param/(1-thinning_param)
   # scalar <- npoints*nrow(subprocess_df)/(npoints-nrow(subprocess_df))
-  # scalar <- thinning_param
+  # scalar <- npoints(data)/thinning_param
   scalar <- thinning_param/(1-thinning_param)
   # t <- qt((1-alpha/2), df = 1/thinning_param)
   t <- qt((1-alpha/2), df = R-1)
@@ -51,7 +47,7 @@ thinning_sv_intensity <- function(data, thinning_param, alpha, R=99, W=1, r=seq(
 poisson_expanding_window_sv_intensity <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
   
   # specifying window sizes over which to simulate
-  Ws <- seq(0.3,3,0.2)
+  Ws <- seq(0.5,2,0.25)
   cover <- rep(c(0),each=length(Ws))
   coverage <- cbind(Ws, cover)
   
@@ -70,26 +66,33 @@ poisson_expanding_window_sv_intensity <- function(nsim, thinning_param, alpha, i
   return(coverage)
 }
 
-intensity_cover_25 <- poisson_expanding_window_sv_intensity(2000, 0.25, 0.05, 250, 500)
-intensity_cover_5 <- poisson_expanding_window_sv_intensity(2000, 0.5, 0.05, 250, 500)
-intensity_cover_75 <- poisson_expanding_window_sv_intensity(2000, 0.75, 0.05, 250, 500)
-save(intensity_cover_25, file="intensity_scaled_hom_pois_25.RData")
+intensity_cover_2 <- poisson_expanding_window_sv_intensity(1000, 0.2, 0.05, 250, 500)
+intensity_cover_5 <- poisson_expanding_window_sv_intensity(1000, 0.5, 0.05, 250, 500)
+intensity_cover_8 <- poisson_expanding_window_sv_intensity(1000, 0.8, 0.05, 250, 500)
+save(intensity_cover_2, file="intensity_scaled_hom_pois_2.RData")
 save(intensity_cover_5, file="intensity_scaled_hom_pois_5.RData")
-save(intensity_cover_75, file="intensity_scaled_hom_pois_75.RData")
+save(intensity_cover_8, file="intensity_scaled_hom_pois_8.RData")
 
-intensity_cover_25_r_over_d <- poisson_expanding_window_sv_intensity(2000, 0.25, 0.05, 250, 500)
-intensity_cover_5_r_over_d <- poisson_expanding_window_sv_intensity(2000, 0.5, 0.05, 250, 500)
-intensity_cover_75_r_over_d <- poisson_expanding_window_sv_intensity(2000, 0.75, 0.05, 250, 500)
-save(intensity_cover_25_r_over_d, file="intensity_scaled_hom_pois_25_r_over_d.RData")
-save(intensity_cover_5_r_over_d, file="intensity_scaled_hom_pois_5_r_over_d.RData")
-save(intensity_cover_75_r_over_d, file="intensity_scaled_hom_pois_75_r_over_d.RData")
+plot(intensity_cover_8,ylim=c(0.8,1),type="l",col=7,lwd=1.5,xlab=TeX('Number of points, $n$'),ylab="Confidence Interval Cover")
+lines(intensity_cover_5,ylim=c(0.5,1),col=15,lwd=1.5)
+lines(intensity_cover_2,ylim=c(0.5,1),col=22,lwd=1.5)
+abline(h=0.95, col=18,lwd=1.5,lty=2)
+legend(1.6,0.85,c("p=0.8","p=0.5","p=0.2"),col=c(7,15,22),lty=c(1,1,1),lwd=c(1.5,1.5,1.5),cex=0.9)
+title("Studentized CI Cover: Intensity of Point Process",line=0.6)
 
-intensity_cover_25_est <- poisson_expanding_window_sv_intensity(2000, 0.25, 0.05, 50, 500)
-intensity_cover_5_est <- poisson_expanding_window_sv_intensity(2000, 0.5, 0.05, 50, 500)
-intensity_cover_75_est <- poisson_expanding_window_sv_intensity(2000, 0.75, 0.05, 50, 500)
-save(intensity_cover_25_est, file="intensity_scaled_hom_pois_25_est.RData")
-save(intensity_cover_5_est, file="intensity_scaled_hom_pois_5_est.RData")
-save(intensity_cover_75_est, file="intensity_scaled_hom_pois_75_est.RData")
+# intensity_cover_25_r_over_d <- poisson_expanding_window_sv_intensity(1000, 0.25, 0.05, 250, 500)
+# intensity_cover_5_r_over_d <- poisson_expanding_window_sv_intensity(1000, 0.5, 0.05, 250, 500)
+# intensity_cover_75_r_over_d <- poisson_expanding_window_sv_intensity(1000, 0.75, 0.05, 250, 500)
+# save(intensity_cover_25_r_over_d, file="intensity_scaled_hom_pois_25_r_over_d.RData")
+# save(intensity_cover_5_r_over_d, file="intensity_scaled_hom_pois_5_r_over_d.RData")
+# save(intensity_cover_75_r_over_d, file="intensity_scaled_hom_pois_75_r_over_d.RData")
+# 
+# intensity_cover_25_est <- poisson_expanding_window_sv_intensity(1000, 0.25, 0.05, 50, 500)
+# intensity_cover_5_est <- poisson_expanding_window_sv_intensity(1000, 0.5, 0.05, 50, 500)
+# intensity_cover_75_est <- poisson_expanding_window_sv_intensity(1000, 0.75, 0.05, 50, 500)
+# save(intensity_cover_25_est, file="intensity_scaled_hom_pois_25_est.RData")
+# save(intensity_cover_5_est, file="intensity_scaled_hom_pois_5_est.RData")
+# save(intensity_cover_75_est, file="intensity_scaled_hom_pois_75_est.RData")
 
 palette("default")   
 par(mfrow=c(1,3))

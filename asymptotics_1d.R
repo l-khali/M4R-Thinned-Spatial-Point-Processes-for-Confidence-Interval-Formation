@@ -5,6 +5,14 @@ library("hawkesbow")
 
 
 # Observing how well thinning method works asymptotically on one dimensional processes
+# estimate variance
+ests <- c()
+for (sim in 1:10000) {
+  p <- rpois(1000,50)
+  ests <- c(ests, gmd(p))
+}
+v <- var(ests)
+
 
 # Thinning function for one dimensional process which statistic being Gini mean difference
 thinning1d_gmd_jh <- function(data, thinning_param, alpha, R=99) {
@@ -25,7 +33,8 @@ thinning1d_gmd_jh <- function(data, thinning_param, alpha, R=99) {
     js <- c(js, j)
   }
   gmds[is.nan(gmds)] <- 0 # subprocesses can have 0 points with low thinning param
-  js <- js / var(gmds)
+  print(var(gmds))
+  js <- js / v
   return(js)
 }
 

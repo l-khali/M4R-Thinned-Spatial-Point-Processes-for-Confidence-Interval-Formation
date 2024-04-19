@@ -36,7 +36,7 @@ thinning_bb_mean <- function(data, thinning_param, alpha, R=99, df=98) {
 poisson_bb_1d <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
   
   # specifying ns over which to simulate
-  ns <- seq(5,100,2)
+  ns <- seq(5,504,10)
   cover <- rep(c(0),each=length(ns))
   coverage <- cbind(ns, cover)
   
@@ -55,14 +55,31 @@ poisson_bb_1d <- function(nsim, thinning_param, alpha, intensity, R=99, df=98) {
   return(coverage)
 }
 
-asymptotic_cover_9_bb <- poisson_bb_1d(1000,0.9,0.05,10,R=500)
-plot(asymptotic_cover_9_bb, main="Asymptotic Cover Using Thinning, p=0.9", xlab="n", type="l")
+asymptotic_cover_8_bb <- poisson_bb_1d(1000,0.8,0.05,10,R=500)
+plot(asymptotic_cover_8_bb, main="Asymptotic Cover Using Thinning, p=0.8", xlab="n", type="l")
 abline(h=0.95,col=2,lty=2)
+
+asymptotic_cover_5_bb <- poisson_bb_1d(1000,0.5,0.05,10,R=500)
+plot(asymptotic_cover_5_bb, main="Asymptotic Cover Using Thinning, p=0.5", xlab="n", type="l")
+abline(h=0.95,col=2,lty=2)
+
+asymptotic_cover_2_bb <- poisson_bb_1d(1000,0.2,0.05,10,R=500)
+plot(asymptotic_cover_2_bb, main="Asymptotic Cover Using Thinning, p=0.2", xlab="n", type="l")
+abline(h=0.95,col=2,lty=2)
+
+plot(asymptotic_cover_8_bb,ylim=c(0.6,1),type="l",col=7,lwd=1.5,xlab=TeX('Number of points, $n$'),ylab="Confidence Interval Cover")
+lines(asymptotic_cover_5_bb,ylim=c(0.5,1),col=15,lwd=1.5)
+lines(asymptotic_cover_2_bb,ylim=c(0.5,1),col=22,lwd=1.5)
+abline(h=0.95, col=18,lwd=1.5,lty=2)
+legend(750,0.85,c("p=0.8","p=0.5","p=0.2"),col=c(7,15,22),lty=c(1,1,1),lwd=c(1.5,1.5,1.5),cex=0.9)
+title("Basic Bootstrap CI Cover: Distribution",line=0.4)
+
+
 
 asymptotic_cover_5_var <- poisson_bb_1d(100,0.5,0.01,10,R=500)
 plot(asymptotic_cover_5_var)
 abline(h=0.95,col=2)
 
-asymptotic_cover_3_var <- poisson_bb_1d(100,0.3,0.05,10,R=500)
-plot(asymptotic_cover_3_var)
+asymptotic_cover_2_var <- poisson_bb_1d(100,0.2,0.05,10,R=500)
+plot(asymptotic_cover_2_var)
 abline(h=0.95,col=2)

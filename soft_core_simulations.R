@@ -32,13 +32,13 @@ lines(sc_marked_64_100[-1,], type="l", lty=1, ylim=c(0.5,1))
 
 
 sc_thinning_09 <- sc_simulation_thinning(500, 250,0.9,0.05)
-sc_thinning_08 <- sc_simulation_thinning(500, 250,0.9,0.05)
+sc_thinning_08 <- sc_simulation_thinning(1000, 250,0.9,0.05)
 sc_thinning_07 <- sc_simulation_thinning(500, 250,0.7,0.05)
 sc_thinning_06 <- sc_simulation_thinning(500, 250,0.6,0.05)
-sc_thinning_05 <- sc_simulation_thinning(500, 250,0.5,0.05)
+sc_thinning_05 <- sc_simulation_thinning(1000, 250,0.5,0.05)
 sc_thinning_04 <- sc_simulation_thinning(500, 250,0.4,0.05)
 sc_thinning_03 <- sc_simulation_thinning(500, 250,0.3,0.05)
-sc_thinning_02 <- sc_simulation_thinning(500, 250,0.2,0.05)
+sc_thinning_02 <- sc_simulation_thinning(1000, 250,0.2,0.05)
 sc_thinning_01 <- sc_simulation_thinning(500, 250,0.1,0.05)
 
 par(mgp=c(2,1,0))  
@@ -55,4 +55,13 @@ legend(0.11, 0.77, legend=c("p=0.9", "p=0.8", "p=0.7", "p=0.6", "p=0.5", "p=0.4"
        col=c(1,2,3,4,5,6,7,8,9), lty =1, cex=0.8)
 abline(h=0.95,lty=2)
 title("Cover on Unclustered Process", line = 0.3)
+
+sc_thinning_08_2 <- sc_thinning_08[-1,]
+sc_thinning_05_2 <- sc_thinning_05[-1,]
+sc_thinning_02_2 <- sc_thinning_02[-1,]
+
+save(sc_thinning_08_2,file="sc_thinning_08_naive")
+save(sc_thinning_05_2,file="sc_thinning_05_naive")
+save(sc_thinning_02_2,file="sc_thinning_02_naive")
+
 
