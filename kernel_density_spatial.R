@@ -81,3 +81,24 @@ title(TeX("Cover of Kernel Estimate Using Thinning"),line=2.5,outer=TRUE, cex.ma
 title(xlab="x", outer=TRUE, line=-1.5, cex.lab=1.5)
 title(ylab="y", outer=TRUE, line=1, cex.lab=1.5)
 
+
+par(mfrow=c(1,3), mar = c(1, 1, 3, 1))
+cm3 <- colourmap(cubicyf(100), range=c(0,400))
+a <- 3
+b <- 3
+p <- rpoispp(intensity_func,win=square(1))
+d_hat <- density(p,diggle=TRUE,at="pixels",positive = TRUE)
+xs <- d_hat$xcol
+ys <- d_hat$yrow
+true_kernel <- t(outer(ys,xs,intensity_func))
+plot(im(true_kernel), col=cm3, main="")
+title("True Intensity",line=0,cex.main=1.4)
+plot(d_hat, col=cm3, main="")
+title("Kernel Estimate",line=0,cex.main=1.4)
+plot(abs(true_kernel-d_hat)/true_kernel, col=brewer.ylorrd(100), main="")
+title("Relative \n Absolute Error",line=0,cex.main=1.4)
+
+
+
+
+

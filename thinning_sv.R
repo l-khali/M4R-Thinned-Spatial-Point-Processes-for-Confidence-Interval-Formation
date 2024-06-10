@@ -1,4 +1,6 @@
 library(spatstat)
+library(pals)
+palette(alphabet(26))
 
 # using thinning to obtain confidence intervals
 # this time instead of basic bootstrap, use the sample variance scaled by (nr/d)
@@ -33,9 +35,10 @@ thinning_sv <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.1),
   }
   K_est <- as.data.frame(Kest(data, r=r, correction=c("isotropic")))["iso"]
   # print(K_est[2,])
-  # scalar <- npoints*thinning_param/(1-thinning_param)
+  scalar <- thinning_param/(1-thinning_param)
   # scalar <- npoints*nrow(subprocess_df)/(npoints-nrow(subprocess_df))
-  scalar <- thinning_param
+  # scalar <- thinning_param
+  # scalar <- 1/empirical_scalars[thinning_param*10]
   # t <- qt((1-alpha/2), df = 1/thinning_param)
   t <- qt((1-alpha/2), df = R-1)
   lower_approx <- c()
@@ -84,15 +87,18 @@ poisson_expanding_window_sv <- function(nsim, thinning_param, alpha, intensity, 
   return(list("coverage"=coverage,"CIs"=confidences_mat))
 }
 
-hom_pois_K_8 <- poisson_expanding_window_sv(1000,0.8,0.05,250,R=500)
-save(hom_pois_K_8, file = "hom_pois_K_8.RData")
+hom_pois_K_8_studentized <- poisson_expanding_window_sv(1000,0.8,0.05,250,R=500)
+save(hom_pois_K_8_studentized, file = "hom_pois_K_8_studentized.RData")
 
-hom_pois_K_5 <- poisson_expanding_window_sv(1000,0.5,0.05,250,R=500)
-save(hom_pois_K_5, file = "hom_pois_K_5.RData")
+hom_pois_K_5_studentized <- poisson_expanding_window_sv(1000,0.5,0.05,250,R=500)
+save(hom_pois_K_5_studentized, file = "hom_pois_K_5_studentized.RData")
 
-hom_pois_K_2 <- poisson_expanding_window_sv(1000,0.2,0.05,250,R=500)
-save(hom_pois_K_2, file = "hom_pois_K_2.RData")
+hom_pois_K_2_studentized <- poisson_expanding_window_sv(1000,0.2,0.05,250,R=500)
+save(hom_pois_K_2_studentized, file = "hom_pois_K_2_studentized.RData")
 
+
+
+# using empirical scaling
 hom_pois_K_8_p_scaling <- poisson_expanding_window_sv(1000,0.8,0.05,250,R=500)
 save(hom_pois_K_8_p_scaling, file = "hom_pois_K_8.RData")
 
@@ -101,6 +107,14 @@ save(hom_pois_K_5_scaling, file = "hom_pois_K_5.RData")
 
 hom_pois_K_2_scaling <- poisson_expanding_window_sv(1000,0.2,0.05,250,R=500)
 save(hom_pois_K_2_scaling, file = "hom_pois_K_2.RData")
+
+plot(hom_pois_K_8_p_scaling$coverage,ylim=c(0.8,1),type="l",col=7,lwd=1.5,xlab=TeX('Window Side Length, $W$'),ylab="Confidence Interval Cover")
+lines(hom_pois_K_5_scaling$coverage,ylim=c(0.5,1),col=15,lwd=1.5)
+lines(hom_pois_K_2_scaling$coverage,ylim=c(0.5,1),col=22,lwd=1.5)
+abline(h=0.95, col=18,lwd=1.5,lty=2)
+legend(1.5,0.9,c("p=0.8","p=0.5","p=0.2"),col=c(7,15,22),lty=c(1,1,1),lwd=c(1.5,1.5,1.5),cex=0.9)
+title(TeX("\\textbf{Studentized CI Cover with\nEmpirical Scaling: Ripley's $K$}"),line=0.6)
+
 
 plotCI(1:50, rep(pi*0.1*0.1,50),li=hom_pois_K_2$CIs[,1][1:50], ui=hom_pois_K_2$CIs[,2][1:50])
 

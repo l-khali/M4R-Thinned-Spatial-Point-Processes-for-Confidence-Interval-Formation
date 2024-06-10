@@ -28,6 +28,7 @@ check_thinned_variance_spatial_intensity <- function(thinning_param, intensity) 
   normalised_thinned_intensity_hats <- c()
   for (i in 1:100) {
     p <- rpoispp(intensity,win=square(W))
+    lambda_hat <- npoints(p)/W^2
     for (j in 1:500) {
       unif <- runif(npoints(p), 0, 1)
       thinned_p_df <- as.data.frame(p)[which(unif < thinning_param),]
@@ -35,7 +36,7 @@ check_thinned_variance_spatial_intensity <- function(thinning_param, intensity) 
       i <- npoints(thinned_p)/(W^2*thinning_param)
       
       thinned_intensity_hats <- c(thinned_intensity_hats, i)
-      normalised_thinned_intensity_hats <- c(normalised_thinned_intensity_hats, sqrt(npoints(p))*(i-true_intensity))
+      normalised_thinned_intensity_hats <- c(normalised_thinned_intensity_hats, sqrt(npoints(p))*(i-lambda_hat))
     }
   }
   sigma2thinned_intensity <- var(thinned_intensity_hats)
@@ -54,7 +55,7 @@ par(mfrow = c(1, 1))
 # hopefully the lines are very close (not very good)
 plot(thinning_params, thinned_sigmas_intensity,type="l",col=2,xlab=" ",ylab=" ",font.main=2,main=("Variance of Intensity Estimates"),lwd=1.5)
 title(mgp=c(2.5,0,0),xlab=TeX("Thinning parameter, $p$"),ylab=TeX(r'(Sample Variance, $\hat{\sigma}$)'))
-lines(thinning_params, sigma2_spatial_intensity/(thinning_params/(1-thinning_params)), col=3,lwd=1.5)
+lines(thinning_params, sigma2_spatial_intensity*(1-thinning_params)/thinning_params, col=3,lwd=1.5)
 legend(0.7, 2450, c(TeX(r'($\hat{\sigma}/p$)'), TeX(r'($\hat{sigma}_s$)')), col = c(3, 2), lty = c(1, 1),
        merge = TRUE)
 # lines(thinning_params, (true_k)*((1-thinning_params)/thinning_params))
