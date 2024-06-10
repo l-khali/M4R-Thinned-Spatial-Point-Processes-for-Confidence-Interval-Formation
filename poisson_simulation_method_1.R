@@ -306,7 +306,7 @@ K_actual_inhom <- function() {
   return(k_actual)
 }
 
-poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R = 99, inhomogenous = FALSE, intensity_est = FALSE) {
+poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, R = 499, inhomogenous = FALSE, intensity_est = FALSE) {
   r <- seq(0.0, 0.14, 0.01)
   if (inhomogenous) {
     K_actual <- K_actual_inhom()
@@ -316,8 +316,8 @@ poisson_simulation_thinning_sv <- function(nsim, lambda, thinning_param, alpha, 
   cover <- rep(c(0),each=15)
   coverage <- cbind(r, cover)
   
-  scaler <- scaling_constant_inhom(thinning_param,intensity=intensity2, mean=TRUE)
-  
+  # scaler <- scaling_constant_inhom(thinning_param,intensity=intensity2, mean=TRUE)
+  scaler <- thinning_param/(1-thinning_param)
   for (i in 1:nsim) {
         tryCatch({print(paste0("Current simulation:",i))
         if (inhomogenous) {

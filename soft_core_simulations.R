@@ -60,8 +60,15 @@ sc_thinning_08_2 <- sc_thinning_08[-1,]
 sc_thinning_05_2 <- sc_thinning_05[-1,]
 sc_thinning_02_2 <- sc_thinning_02[-1,]
 
-save(sc_thinning_08_2,file="sc_thinning_08_naive")
-save(sc_thinning_05_2,file="sc_thinning_05_naive")
-save(sc_thinning_02_2,file="sc_thinning_02_naive")
+save(sc_thinning_08_2,file="sc_thinning_08_naive.RData")
+save(sc_thinning_05_2,file="sc_thinning_05_naive.RData")
+save(sc_thinning_02_2,file="sc_thinning_02_naive.RData")
 
+par(mgp=c(2,1,0))
+plot(sc_thinning_08_2, type="l", lty=1, ylim=c(0,1), col=7, lwd=1.5, xlab="Radius, r", ylab="Confidence Interval Cover")
+lines(sc_thinning_05_2, type="l", lty=1, ylim=c(0.5,1), col=15, lwd=1.5)
+lines(sc_thinning_02_2, type="l", lty=1, ylim=c(0.5,1), col=22, lwd=1.5)
+abline(h=0.95, col=18, lwd=1.5, lty=2)
+legend(0.01,0.3,c("p=0.8","p=0.5","p=2"),col=c(7,15,22),lwd=c(1.5,1.5,1.5),cex=0.9)
+title(TeX("\\textbf{Soft Core}"))
 

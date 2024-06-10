@@ -32,15 +32,19 @@ for (thinning_param in thinning_params) {
 }
 
 # hopefully the lines are very close
-plot(thinning_params, thinned_sigmas_exp,type="l")
-lines(thinning_params, sigma2*((1-thinning_params)/thinning_params))
+par(mfrow=c(1,2))
+plot(thinning_params, thinned_sigmas_exp,type="l",col=purple)
+lines(thinning_params, sigma2*((1-thinning_params)/thinning_params),col=green)
 
 
-par(mfrow = c(1, 2))
-plot(thinning_params, thinned_sigmas_exp,type="l",col=2,xlab="p",ylab=TeX("Thinned Variance, ${sigma}_s$"), main="Exponential Distribution")
-lines(thinning_params, sigma2*((1-thinning_params)/thinning_params),col=3)
-plot(thinning_params, thinned_sigmas,type="l",col=2,xlab="p",ylab=TeX("Thinned Variance, ${sigma}_s$"), main="Homogenous Poisson")
-lines(thinning_params, sigma2_spatial*((1-thinning_params)/thinning_params),col=3)
+par(mfrow = c(1, 3))
+plot(thinning_params, thinned_sigmas_exp,type="l", main="Variance of Intensity Estimates on \n Poisson Probability Distribution",ylab="",xlab="",font.main=2,lwd=2,col=purple)
+title(mgp=c(2.5,0,0),xlab=TeX("Thinning parameter, $p$"),ylab=TeX(r'(Sample Variance, $\hat{\sigma}$)'))
+lines(thinning_params, sigma2*((1-thinning_params)/thinning_params),col=green,lwd=2,xlab="",ylab="")
+legend(0.55, 85, c(TeX(r'($\hat{\sigma}_s$)'), TeX(r'($\hat{sigma}(1-p)/p$)')), col = c(purple, green), lwd = c(2, 2),
+       merge = TRUE)
+# plot(thinning_params, thinned_sigmas,type="l",col=2,xlab="p",ylab=TeX("Thinned Variance, ${sigma}_s$"), main="Homogenous Poisson")
+# lines(thinning_params, sigma2_spatial*((1-thinning_params)/thinning_params),col=3)
 
 
 
@@ -95,3 +99,4 @@ lines(thinning_params, sigma2_spatial*((1-thinning_params)/thinning_params),col=
 # 
 # 
 # 
+

@@ -27,7 +27,7 @@ thinning_thm3 <- function(data, thinning_param, alpha, R=99) {
 par(mfrow = c(3, 3))
 op <- par(mfrow = c(3,3),
           oma = c(5,4,2,1) + 0.1,
-          mar = c(2,2,2,2) + 0.1,)
+          mar = c(2,2,2,2) + 0.1)
 
 # Homogenous Poisson Process (independent)
 for (thinning_param in c(0.2,0.5,0.8)) {

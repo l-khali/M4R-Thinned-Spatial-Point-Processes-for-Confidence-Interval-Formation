@@ -86,7 +86,7 @@ library(docstring)
 
 
 
-thinning <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.14, 0.01)) {
+thinning <- function(data, thinning_param, alpha, R=500, W=1, r=seq(0.0, 0.14, 0.01)) {
   #' Implement thinning method to obtain (1-alpha)*100% confidence intervals for
   #' a range of radii. The radii used are a sequence from 0.01 to 0.14 with a
   #' step of 0.01 as used in Loh and Stein (2004). Uses the basic bootstrap to
@@ -135,7 +135,7 @@ thinning <- function(data, thinning_param, alpha, R=99, W=1, r=seq(0.0, 0.14, 0.
 
 thinning_1 <- poisson_simulation_thinning(500, 250, 1, 0.05)
 plot(thinning_1[-1,], type="l", lty=1, ylim=c(0,1), main="Poisson: thinning (1.0)")
-thinning_09 <- poisson_simulation_thinning(500, 250, 0.9, 0.05)
+thinning_09 <- poisson_simulation_thinning(1000, 250, 0.9, 0.05)
 plot(thinning_09[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.9)")
 thinning_08 <- poisson_simulation_thinning(1000, 250, 0.8, 0.05)
 plot(thinning_08[-1,], type="l", lty=1, ylim=c(0.5,1), main="Poisson: thinning (0.8)")
@@ -198,7 +198,7 @@ thinning_sample_var <- function(data, thinning_param, alpha, R=99, inhomogenous=
     k_vals <- cbind(k_vals, as.data.frame(k)["iso"])
   }
   
-  scaler <- scaling_constant_inhom(thinning_param, 250, mean=TRUE)
+  # scaler <- scaling_constant_inhom(thinning_param, 250, mean=TRUE)
   if (inhomogenous) {
     K_est <- as.data.frame(Kinhom(data, lambda=intensity2, r=r, correction=c("isotropic")))["iso"]
   } else {

@@ -56,7 +56,7 @@ legend(0.11, 0.77, legend=c("p=0.9", "p=0.8", "p=0.7", "p=0.6", "p=0.5", "p=0.4"
 abline(h=0.95,lty=2)
 title("Cover on Clustered Process", line = 0.3)
 
-
+ 
 par(mgp=c(2,1,0))
 plot(ns_thinning_08[-1,], type="l", lty=1, ylim=c(0,1), col=1, xlab="Radius", ylab="Confidence Interval Cover")
 lines(ns_thinning_05[-1,], type="l", lty=1, ylim=c(0.5,1), col=2)

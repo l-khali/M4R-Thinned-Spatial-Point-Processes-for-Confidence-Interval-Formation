@@ -3,7 +3,7 @@
 # Generate a homogeneous poisson process with lambda=50
 data <- rpoispp(50)
 plot(data,pch=20, cex=1.5,main="")
-title("Origional Poisson Process", line=-0.6, cex.main=2.5)
+title("Original Poisson Process", line=-0.6, cex.main=2)
 
 # Specifying increments used for tiling method when N = 4
 new_process <- data.frame()
@@ -23,7 +23,7 @@ yend <- 0.65
 segments(xstart, ystart, xend, ystart, lty=2)
 segments(xstart, ystart, xstart, yend, lty=2)
 segments(xstart, yend, xend, yend, lty=2)
-segments(xend, ystart, xend, yend1, lty=2)
+segments(xend, ystart, xend, yend, lty=2)
 text(0.12, 0.63, "a", cex=1.5)
 
 # Data in this tile to predetermined position
@@ -159,7 +159,7 @@ window <- owin(c(0, 1), c(0,1))
 new_ppp <- as.ppp(new_process, window)
 
 plot(new_ppp,pch=20, cex=1.5, main="")
-title("Bootstrapped Process (Tiling)", line=-0.6, cex.main=2.5)
+title("Bootstrapped Process (Tiling)", line=-0.6, cex.main=2)
 segments(0.5,0,0.5,1,lty=2)
 segments(0,0.5,1,0.5,lty=2)
 text(0.02, 0.48, "a", cex=1.5)
